@@ -26,6 +26,8 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
     }
   };
 
+
+
   return (
     <div className="border-2 shadow-md rounded-md w-[400px] bg-white">
       <div className="p-4">

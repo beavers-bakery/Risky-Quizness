@@ -16,7 +16,6 @@ export default function Quizpage() {
     // ranOnce for checks after each question
   // onlyOnce for capturing data during 1 game
   const [ranOnce, setRanOnce] = useState(false)
-  const [onlyOnce, setOnlyOnce] = useState(false)
   // shuffle incorrect and correct answers into an array
   const [shuffledArray, setShuffledArray] = useState([])
   const [questionsFromDatabase, setQuestionsFromDatabase] = useState([])
@@ -42,16 +41,13 @@ export default function Quizpage() {
     // generally unfamiliar with querying firstore, and surely not ideal...
     // but it does it's job
     const querySnapshot = await getDocs(questions)
-    console.log(querySnapshot, "querySnapshot")
 
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       const data = doc.data()
       data.id = doc.id
-      console.log(data, "dataOBJ");
       returnArr.push(data)
     });
-    console.log(returnArr, "this is returnArr")
     setQuestionsFromDatabase(returnArr)
   }
 
@@ -65,15 +61,7 @@ export default function Quizpage() {
 
     try {
 
-    // if (!onlyOnce) {
-    //   console.log("ONLY ONCE")
-    //   setOnlyOnce(true)
-    //  await queryForQuestions()
-    //   console.log(questionsFromDatabase, "data")
-    // }
-
     if (!ranOnce) {
-      console.log(questionsFromDatabase, "DATA IN !RANONCE")
     let newAnswerArr = [...questionsFromDatabase[questionNumber].incorrectAnswers]
     newAnswerArr.push(questionsFromDatabase[questionNumber].correctAnswer)
     const newShuffledArray = () => newAnswerArr.sort((a, b) => 0.5 - Math.random());
@@ -91,7 +79,7 @@ export default function Quizpage() {
 
   // go ahead and run that mama-jama
 
-  console.log(questionsFromDatabase, "questionsFromDatabase after setData()")
+ 
 
   // reset a bunch of stuff after every question
   const resetQuestion = () => {
@@ -105,7 +93,6 @@ export default function Quizpage() {
 
   useEffect(() => {
     // returned function will be called on component unmount
-    console.log("use effect ran")
     queryForQuestions()
     startTimer()
     return () => {
@@ -118,12 +105,9 @@ export default function Quizpage() {
 
 
   const startTimer = () => {
-    console.log(time, "dis time")
     const interval = setInterval(() => {
       setTime(time => time - 1)
       time--
-      console.log(time)
-      console.log(questionsFromDatabase)
       if (time === 0) {
       clearInterval(interval)
       }
@@ -161,12 +145,11 @@ clearInterval(setTime(0))
   })
 
   const Check = React.memo(() => {
-    console.log(chosenAnswer)
     return (
       <button className='w-full py-3 mt-10 bg-blue-400 p-3 pl-4 pr-4 rounded-lg font-bold hover:ring-2 ring-offset-2 ring-blue-600'  onClick={() => checkAnswer(chosenAnswer, questionsFromDatabase[questionNumber].correctAnswer)}>Check answer</button>
     )
   })
-  console.log(questionsFromDatabase)
+
 
    // if the questions are there let's do the thing ... or naw
 

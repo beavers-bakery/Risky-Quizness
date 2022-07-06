@@ -15,15 +15,17 @@ const Home = () => {
           </Link>
           <strong>Email:</strong> {user?.email}
           <hr />
-          <strong>Best Score:</strong> {user?.email}
+          <strong>Best Score:</strong> {user?.scores}
           <hr />
-          <strong>Current Score:</strong> {user?.email}
-          <button
-            type='button'
-            className='w-full rounded bg-[#90FCF9] py-3 font-semibold'
-          >
-            Start Game
-          </button>
+          <strong>Current Score:</strong> {user?.scores}
+          <Link to='/quiz'>
+            <button
+              type='button'
+              className='w-full rounded bg-[#90FCF9] py-3 font-semibold'
+            >
+              Start Game
+            </button>
+          </Link>
         </div>
         <div className='w-100 text-center mt-2'>
           <Link to='/welcome'>

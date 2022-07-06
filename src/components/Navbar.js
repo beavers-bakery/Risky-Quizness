@@ -11,7 +11,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/welcome");
+    navigate("/");
   };
 
   return (
@@ -31,7 +31,7 @@ const Navbar = () => {
           )}
         </div>
         <div
-          className={`flex flex-col md:flex-row items-center md:pb-0 pb-12 absolute z-50 md:static bg-green-600 left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in ${
+          className={`flex flex-col md:flex-row items-center md:pb-0 pb-6 absolute z-50 md:static bg-green-600 left-0 w-full md:w-auto transition-all duration-500 ease-in ${
             open ? "top-15" : "top-[-490px]"
           }`}
         >

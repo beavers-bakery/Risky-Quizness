@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
 
   const setUserInDatabase = async (currentUser) => {
     await setDoc(doc(db, "users", currentUser.uid), {
-      email: user.email,
+      email: currentUser.email,
     });
   };
 

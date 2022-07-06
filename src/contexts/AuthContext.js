@@ -5,8 +5,10 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
+  updateEmail,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useContext, useState, useEffect, createContext } from "react";
 
 const AuthContext = createContext();
@@ -41,6 +43,18 @@ export const AuthProvider = ({ children }) => {
     return sendPasswordResetEmail(auth, email);
   };
 
+  const editProfile = async (displayNameChange, emailChange) => {
+    await updateEmail(auth.currentUser, emailChange);
+
+    await updateProfile(auth.currentUser, {
+      displayName: displayNameChange,
+    });
+
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+      email: auth.currentUser.email,
+    });
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
@@ -48,7 +62,7 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   });
 
-  const value = { signup, login, logout, user, passwordReset };
+  const value = { signup, login, logout, user, passwordReset, editProfile };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

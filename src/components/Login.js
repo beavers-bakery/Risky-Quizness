@@ -19,7 +19,7 @@ const Login = ({
     try {
       setError("");
       await login(emailRef.current.value, passwordRef.current.value);
-      navigate("/");
+      navigate("/profile");
     } catch (err) {
       console.error(err);
       setError(err.message);

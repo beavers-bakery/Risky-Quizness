@@ -3,7 +3,7 @@ import { collection, getDocs, query, limit, getFirestore } from 'firebase/firest
 import { db } from '../firebase';
 import { async } from '@firebase/util';
 
-const firestore = getFirestore()
+// const firestore = getFirestore()
 
 
 
@@ -31,9 +31,9 @@ export default function Quizpage() {
   // limit only pulls the first 10 questions instead of all of them
   // should be helpful to change questions every day
   async function queryForQuestions() {
-    let questionsArr = []
+    let returnArr = []
     const questions = query(
-      collection(firestore, 'questions'),
+      collection(db, 'questions'),
       limit(10)
     )
 
@@ -42,21 +42,17 @@ export default function Quizpage() {
     // generally unfamiliar with querying firstore, and surely not ideal...
     // but it does it's job
     const querySnapshot = await getDocs(questions)
-    querySnapshot.docs.forEach((doc, i) => {
-      questionsArr.push({
-        category: doc._document.data.value.mapValue.fields.category.stringValue,
-        id: i,
-        correctAnswer: doc._document.data.value.mapValue.fields.correctAnswer.stringValue,
-        incorrectAnswers: doc._document.data.value.mapValue.fields.incorrectAnswers.arrayValue.values.map((answer) => {return answer.stringValue}),
-        question: doc._document.data.value.mapValue.fields.question.stringValue,
-        tags: doc._document.data.value.mapValue.fields.tags.arrayValue.values.map((tag) => {return tag.stringValue}),
-        type: doc._document.data.value.mapValue.fields.type.stringValue,
-        difficulty: doc._document.data.value.mapValue.fields.difficulty.stringValue,
-        regions: [ ]
-        }
-        )
-    })
-    setQuestionsFromDatabase(questionsArr)
+    console.log(querySnapshot, "querySnapshot")
+
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      const data = doc.data()
+      data.id = doc.id
+      console.log(data, "dataOBJ");
+      returnArr.push(data)
+    });
+    console.log(returnArr, "this is returnArr")
+    setQuestionsFromDatabase(returnArr)
   }
 
 
@@ -69,12 +65,12 @@ export default function Quizpage() {
 
     try {
 
-    if (!onlyOnce) {
-      console.log("ONLY ONCE")
-      setOnlyOnce(true)
-      const data = await queryForQuestions()
-      setQuestionsFromDatabase(data)
-    }
+    // if (!onlyOnce) {
+    //   console.log("ONLY ONCE")
+    //   setOnlyOnce(true)
+    //  await queryForQuestions()
+    //   console.log(questionsFromDatabase, "data")
+    // }
 
     if (!ranOnce) {
       console.log(questionsFromDatabase, "DATA IN !RANONCE")
@@ -91,9 +87,11 @@ export default function Quizpage() {
 
   }
 
-  // go ahead and run that mama-jama
   setData()
 
+  // go ahead and run that mama-jama
+
+  console.log(questionsFromDatabase, "questionsFromDatabase after setData()")
 
   // reset a bunch of stuff after every question
   const resetQuestion = () => {
@@ -106,8 +104,10 @@ export default function Quizpage() {
   }
 
   useEffect(() => {
-    startTimer()
     // returned function will be called on component unmount
+    console.log("use effect ran")
+    queryForQuestions()
+    startTimer()
     return () => {
       stopTimer()
     }
@@ -123,11 +123,14 @@ export default function Quizpage() {
       setTime(time => time - 1)
       time--
       console.log(time)
+      console.log(questionsFromDatabase)
       if (time === 0) {
       clearInterval(interval)
       }
     }, 1000)
 }
+
+
 
 const stopTimer = () => {
 clearInterval(setTime(0))
@@ -166,13 +169,13 @@ clearInterval(setTime(0))
   console.log(questionsFromDatabase)
 
    // if the questions are there let's do the thing ... or naw
-   questionsFromDatabase.length ?
-  (
+
+  return (
     <div className="flex flex-col h-screen bg-gradient-to-b from-[#063970] to-blue-200">
-      <span className='text-2xl text-white inline'>Difficulty: { questionsFromDatabase[questionNumber].difficulty}</span>
+     <span className='text-2xl text-white inline'>Difficulty: { questionsFromDatabase[questionNumber]?.difficulty}</span>
       <span className='text-2xl text-white text-right inline'>Points: {points}</span>
       <span className='text-2xl text-white text-right inline'>Time: {time}</span>
-      <div className='text-2xl text-white text-center'>{questionsFromDatabase[questionNumber].question}</div>
+      <div className='text-2xl text-white text-center'>{questionsFromDatabase[questionNumber]?.question}</div>
     {
     <Answers/>
     }
@@ -182,7 +185,7 @@ clearInterval(setTime(0))
     <button className={`w-full py-3 mt-10 ${time > 0 ? grey : blue} p-3 pl-4 pr-4 rounded-lg font-bold transition duration-500 ease-in-out hover:ring-2 ring-offset-2 ring-gray-600 ${time > 0 ? 'cursor-not-allowed' : ''}`} onClick={resetQuestion} >next</button>
 
     </div>
-  ) : <div>nope</div>
+  )
 
 
 }

@@ -1,40 +1,36 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useRef, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
-const Signup = ({ setShowSignupModal, showSignupModal }) => {
+const EditProfile = ({ showEditModal, setShowEditModal }) => {
   const [error, setError] = useState("");
+  const nameRef = useRef();
   const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const navigate = useNavigate();
-  const { signup } = useAuth();
+  const displayNameRef = useRef();
+  const { editProfile, user } = useAuth();
 
-  const handleSubmit = async (e) => {
-    if (passwordConfirmRef.current.value !== passwordRef.current.value) {
-      return setError("Passwords do not match");
-    }
+  useEffect(() => {
+    emailRef.current.value = user?.email;
+    displayNameRef.current.value = user?.displayName;
+  }, [user]);
 
+  const handleSubmit = (e) => {
     e.preventDefault();
     try {
       setError("");
-      await signup(emailRef.current.value, passwordRef.current.value);
-      navigate("/");
+      editProfile(displayNameRef.current.value, emailRef.current.value);
+      setShowEditModal(!showEditModal);
     } catch (err) {
-      console.error(err);
-      setError(err.message);
+      setError("");
     }
   };
-
-
 
   return (
     <div className="border-2 shadow-md rounded-md w-[400px] bg-white">
       <div className="p-4">
         <div className="flex justify-between">
-          <h2 className="text-2xl font-bold text-center">Sign Up</h2>
+          <h2 className="text-2xl font-bold text-center">Edit Information</h2>
           <p
-            onClick={() => setShowSignupModal(!showSignupModal)}
+            onClick={() => setShowEditModal(!showEditModal)}
             className="cursor-pointer"
           >
             X
@@ -53,7 +49,15 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
         >
           <div>
             <input
-              id="signup-email"
+              id="edit-name"
+              placeholder="Name"
+              ref={nameRef}
+              className="mt-4 h-10 border-2 rounded-md p-2 w-[350px]"
+            />
+          </div>
+          <div>
+            <input
+              id="edit-email"
               placeholder="Email"
               ref={emailRef}
               className="mt-4 h-10 border-2 rounded-md p-2 w-[350px]"
@@ -61,25 +65,15 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
           </div>
           <div>
             <input
-              id="signup-password"
-              type="password"
-              placeholder="Password"
-              ref={passwordRef}
-              className="m-4 h-10 border-2 rounded-md p-2 w-[350px]"
-            />
-          </div>
-          <div>
-            <input
-              id="password-confirm"
-              type="password"
-              placeholder="Confirm Password"
-              ref={passwordConfirmRef}
+              id="edit-display-name"
+              placeholder="Display Name"
+              ref={displayNameRef}
               className="m-4 h-10 border-2 rounded-md p-2 w-[350px]"
             />
           </div>
           <div>
             <button className="w-[350px] border-2 rounded-md px-8 py-2 bg-green-600 text-white mt-2">
-              Signup
+              Submit Changes
             </button>
           </div>
         </form>
@@ -88,4 +82,4 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
   );
 };
 
-export default Signup;
+export default EditProfile;

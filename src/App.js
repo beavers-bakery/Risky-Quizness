@@ -12,10 +12,8 @@ function App() {
   return (
     <Router>
       {user && <Navbar />}
-
       <Routes>
         <Route path="/" element={user ? <Home /> : <Welcome />} />
-
         <Route path="/profile" element={user ? <UserProfile /> : <Welcome />} />
         <Route path="/quiz" element={user ? <Quizpage /> : <Welcome />} />
       </Routes>

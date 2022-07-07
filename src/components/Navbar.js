@@ -11,6 +11,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+    setOpen(fakse);
     navigate("/");
   };
 
@@ -36,6 +37,14 @@ const Navbar = () => {
           }`}
         >
           <NavLink
+            onClick={() => setOpen(false)}
+            to="/"
+            className="mx-2 hover:text-gray-300 duration-500 md:ml-8 text-xl md:my-0 my-7"
+          >
+            Home
+          </NavLink>
+          <NavLink
+            onClick={() => setOpen(false)}
             to="/profile"
             className="mx-2 hover:text-gray-300 duration-500 md:ml-8 text-xl md:my-0 my-7"
           >

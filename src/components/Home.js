@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   const { user, logout } = useAuth();
-  console.log(user)
 
   return (
     <>
@@ -29,7 +28,7 @@ const Home = () => {
           </Link>
         </div>
         <div className='w-100 text-center mt-2'>
-          <Link to='/welcome'>
+          <Link to='/'>
             <button
               type='button'
               className='w-full rounded bg-[#90FCF9] py-3 font-semibold md:justify-self-end'

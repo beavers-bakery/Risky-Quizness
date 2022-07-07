@@ -14,12 +14,12 @@ export default function Quizpage() {
   // as well as rendering countdown
   let [time, setTime] = useState(15);
     // ranOnce for checks after each question
-  // onlyOnce for capturing data during 1 game
   const [ranOnce, setRanOnce] = useState(false)
   // shuffle incorrect and correct answers into an array
   const [shuffledArray, setShuffledArray] = useState([])
   const [questionsFromDatabase, setQuestionsFromDatabase] = useState([])
   let [chosenAnswer, setChosenAnswer] = useState("");
+  let [answerPicked, setAnswerPicked] = useState(false)
   const [points, setPoints] = useState(0)
   // color constants for easy on-the-fly tailwind changes when answer is choosen/incorrect ect
   const red = 'bg-rose-700'
@@ -37,9 +37,7 @@ export default function Quizpage() {
     )
 
 
-    // querySnapshot organizes the question data the way I want
-    // generally unfamiliar with querying firstore, and surely not ideal...
-    // but it does it's job
+
     const querySnapshot = await getDocs(questions)
 
     querySnapshot.forEach((doc) => {
@@ -55,11 +53,11 @@ export default function Quizpage() {
 
 
 
-// on first run set the questions to local storage
 // after every question re-shuffle questions array
   async function setData() {
 
     try {
+
 
     if (!ranOnce) {
     let newAnswerArr = [...questionsFromDatabase[questionNumber].incorrectAnswers]
@@ -69,17 +67,19 @@ export default function Quizpage() {
     setShuffledArray(newShuffledArray())
     }
     }
+    // don't like errors? stop loging them. easy...
+    // with console.error uncommented we get 1 incorrectAnswers doesn't exist error
+    // before the data shows up
     catch(err) {
-      console.error(err)
+      // console.error(err)
     }
 
   }
 
   setData()
-
   // go ahead and run that mama-jama
 
- 
+
 
   // reset a bunch of stuff after every question
   const resetQuestion = () => {
@@ -89,12 +89,18 @@ export default function Quizpage() {
     time = 15
     startTimer()
     setRanOnce(false)
+    console.log(answerPicked, "answer picked pre resetquestion")
+    setAnswerPicked(false)
+    console.log(answerPicked, "answer picked post resetquestion")
   }
 
   useEffect(() => {
-    // returned function will be called on component unmount
+    // very important to call queryForQuestions before startTimer
+    // unless you like pain
+    // on first run set the questions to local storage
     queryForQuestions()
     startTimer()
+    // returned function will be called on component unmount
     return () => {
       stopTimer()
     }
@@ -108,6 +114,8 @@ export default function Quizpage() {
     const interval = setInterval(() => {
       setTime(time => time - 1)
       time--
+      console.log(time)
+      console.log(answerPicked)
       if (time === 0) {
       clearInterval(interval)
       }
@@ -118,25 +126,48 @@ export default function Quizpage() {
 
 const stopTimer = () => {
 clearInterval(setTime(0))
+console.log("ya fuckin did it stop timer ran")
 }
 
 
     // just logs for now.... will add points here in a jiff
     let checkAnswer = (chosen, answer) => {
-      if (chosen === answer) {
-        console.log("...Not bad", chosen)
+      if (chosen === answer && time > 0) {
+        console.log("...Not bad","questionsFromDatabase[questionNumber].difficulty: ",questionsFromDatabase[questionNumber].difficulty , chosen)
+        if (questionsFromDatabase[questionNumber].difficulty === 'easy') {
+          setPoints(points + 10)
+        }
+        if (questionsFromDatabase[questionNumber].difficulty === 'medium') {
+          setPoints(points + 20)
+        }
+        if (questionsFromDatabase[questionNumber].difficulty === 'hard') {
+          setPoints(points + 30)
+
+        }
       } else {
-        console.log("You're a dumbass", chosen)
+        console.log("You're a dumbass","questionsFromDatabase[questionNumber].difficulty: ",questionsFromDatabase[questionNumber].difficulty, chosen)
       }
+      console.log("WIGALEE WOGALEE")
+      setAnswerPicked(true)
+      console.log(answerPicked, "answerPicked")
+      stopTimer()
     }
 
   // memo prevents array from shuffling every second from the timer re-render
   // tailwind css conditionals to be edgy
+
+    // ${answer === chosenAnswer &&
+  //   (answer !== questionsFromDatabase[questionNumber].correctAnswer || time > 0)
+  //   ? blue : (answer === questionsFromDatabase[questionNumber].correctAnswer || time > 0 ? green : red)}
+
+
   const Answers = React.memo(({answers}) => {
     return (
       shuffledArray.map((answer, i) => {
         return (
-        <button className={`w-full py-3 mt-10 ${time > 0 && answer === chosenAnswer ? blue : (answer === questionsFromDatabase[questionNumber].correctAnswer || time > 0 ? green : red)} rounded-md
+        <button className={`w-full py-3 mt-10 ${answer === chosenAnswer &&
+             (answer !== questionsFromDatabase[questionNumber].correctAnswer || time > 0)
+             ? blue : (answer === questionsFromDatabase[questionNumber].correctAnswer || time > 0 ? green : red)} rounded-md
         font-medium text-white uppercase
         focus:outline-none hover:ring-2 ring-offset-2 ring-blue-600  focus:outline-none`} key={i} onClick={() => setChosenAnswer(answer)}>{answer}</button>
         )
@@ -144,20 +175,28 @@ clearInterval(setTime(0))
     )
   })
 
+  // weird bug when check answer is pressed multiple times on the next question the timer falls too quickly...
+  // thought I could combat this by passing a useless function to Onclick if the user has already checked thier answer
+  // checkAnswer only runs on first button click but issue remains ...curious
   const Check = React.memo(() => {
     return (
-      <button className='w-full py-3 mt-10 bg-blue-400 p-3 pl-4 pr-4 rounded-lg font-bold hover:ring-2 ring-offset-2 ring-blue-600'  onClick={() => checkAnswer(chosenAnswer, questionsFromDatabase[questionNumber].correctAnswer)}>Check answer</button>
+      <button className='w-full py-3 mt-10 bg-blue-400 p-3 pl-4 pr-4 rounded-lg font-bold hover:ring-2 ring-offset-2 ring-blue-600'  onClick={!answerPicked ? () => checkAnswer(chosenAnswer, questionsFromDatabase[questionNumber].correctAnswer) : ()=> {console.log("CHECK ANSWER DOESNT WORK... good")}}>Check answer</button>
     )
   })
 
 
    // if the questions are there let's do the thing ... or naw
 
+
+
+
+
+
   return (
     <div className="flex flex-col h-screen bg-gradient-to-b from-[#063970] to-blue-200">
-     <span className='text-2xl text-white inline'>Difficulty: { questionsFromDatabase[questionNumber]?.difficulty}</span>
+     <span className='text-2xl text-white inline'>Difficulty: {questionsFromDatabase[questionNumber]?.difficulty}</span>
       <span className='text-2xl text-white text-right inline'>Points: {points}</span>
-      <span className='text-2xl text-white text-right inline'>Time: {time}</span>
+      <span className='text-2xl text-white text-right inline'>Time: {!answerPicked ? time : 0}</span>
       <div className='text-2xl text-white text-center'>{questionsFromDatabase[questionNumber]?.question}</div>
     {
     <Answers/>
@@ -165,7 +204,7 @@ clearInterval(setTime(0))
     {
     <Check/>
     }
-    <button className={`w-full py-3 mt-10 ${time > 0 ? grey : blue} p-3 pl-4 pr-4 rounded-lg font-bold transition duration-500 ease-in-out hover:ring-2 ring-offset-2 ring-gray-600 ${time > 0 ? 'cursor-not-allowed' : ''}`} onClick={resetQuestion} >next</button>
+    <button className={`w-full py-3 mt-10 ${time > 0 ? grey : blue} p-3 pl-4 pr-4 rounded-lg font-bold transition duration-500 ease-in-out hover:ring-2 ring-offset-2 ring-gray-600 ${time > 0 ? 'cursor-not-allowed' : ''}`} onClick={time <= 0 || answerPicked ? resetQuestion : () => {}} >next</button>
 
     </div>
   )

@@ -45,6 +45,13 @@ const Navbar = () => {
           </NavLink>
           <NavLink
             onClick={() => setOpen(false)}
+            to="/leaderboard"
+            className="mx-2 hover:text-gray-300 duration-500 md:ml-8 text-xl md:my-0 my-7"
+          >
+            Leaderboard
+          </NavLink>
+          <NavLink
+            onClick={() => setOpen(false)}
             to="/profile"
             className="mx-2 hover:text-gray-300 duration-500 md:ml-8 text-xl md:my-0 my-7"
           >

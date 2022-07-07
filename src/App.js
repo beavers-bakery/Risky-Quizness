@@ -6,6 +6,7 @@ import Quizpage from "./components/Quizpage";
 import Navbar from "./components/Navbar";
 import Result from "./components/Result";
 import { useAuth } from "./contexts/AuthContext";
+import Leaderboard from "./components/Leaderboard";
 
 function App() {
   const { user } = useAuth();
@@ -17,6 +18,10 @@ function App() {
         <Route path="/" element={user ? <Home /> : <Welcome />} />
         <Route path="/profile" element={user ? <UserProfile /> : <Welcome />} />
         <Route path="/quiz" element={user ? <Quizpage /> : <Welcome />} />
+        <Route
+          path="/leaderboard"
+          element={user ? <Leaderboard /> : <Welcome />}
+        />
         <Route path="/result" element={user ? <Result /> : <Welcome />} />
       </Routes>
     </Router>

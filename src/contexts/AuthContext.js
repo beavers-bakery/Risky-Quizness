@@ -1,4 +1,4 @@
-import { auth, db } from '../firebase';
+import { auth, db } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -7,9 +7,9 @@ import {
   signOut,
   updateProfile,
   updateEmail,
-} from 'firebase/auth';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
-import { useContext, useState, useEffect, createContext } from 'react';
+} from "firebase/auth";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { useContext, useState, useEffect, createContext } from "react";
 
 const AuthContext = createContext();
 
@@ -17,20 +17,24 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
   const setUserInDatabase = async (currentUser) => {
-    await setDoc(doc(db, 'users', currentUser.uid), {
+    await setDoc(doc(db, "users", currentUser.uid), {
       email: currentUser.email,
+      username: currentUser.displayName,
     });
   };
 
   const signup = async (email, password, username) => {
-    console.log({ username });
     const { user } = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-   await setUserInDatabase(user)
-   await updateProfile(user, { displayName: username });
+
+    await updateProfile(auth.currentUser, {
+      displayName: username,
+    });
+
+    await setUserInDatabase(user);
   };
 
   const login = (email, password) => {
@@ -52,7 +56,7 @@ export const AuthProvider = ({ children }) => {
       displayName: displayNameChange,
     });
 
-    await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
       email: auth.currentUser.email,
     });
   };

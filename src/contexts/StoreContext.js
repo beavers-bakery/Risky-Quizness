@@ -24,6 +24,22 @@ export const addUserScore = async function (userId, score, category) {
   await addDoc(collection(db, "scores"), scoreDoc);
 };
 
+export const getAllScores = async () => {
+  const scoresCol = collection(db, "scores");
+  const usersCol = collection(db, "users");
+  const scoresQuery = query(scoresCol);
+  const usersQuery = query(usersCol);
+  const scoresQuerySnapshot = await getDocs(scoresQuery);
+  const usersQuerySnapshot = await getDocs(usersQuery);
+
+  return scoresQuerySnapshot.docs.map((score) => {
+    const user = usersQuerySnapshot.docs.find(
+      (user) => user.id === score.data().userId
+    );
+    return { ...score.data(), username: user.data().username };
+  });
+};
+
 export const getUserScore = async function (userId) {
   const scoresRef = collection(db, "scores");
   const q = query(scoresRef, where("userId", "==", userId));

@@ -1,18 +1,14 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 import { collection, getDocs, query, limit, getFirestore } from 'firebase/firestore';
 import { db } from '../firebase';
 import { async } from '@firebase/util';
-
-// const firestore = getFirestore()
-
-
 
 export default function Quizpage() {
 
   const [questionNumber, setQuestionNumber] = useState(0);
   // used let for time useState for more flexibility with time checks
   // as well as rendering countdown
-  let [time, setTime] = useState(15);
+   const [timer, setTimer] = useState('15');
     // ranOnce for checks after each question
   const [ranOnce, setRanOnce] = useState(false)
   // shuffle incorrect and correct answers into an array
@@ -21,6 +17,7 @@ export default function Quizpage() {
   let [chosenAnswer, setChosenAnswer] = useState("");
   let [answerPicked, setAnswerPicked] = useState(false)
   const [points, setPoints] = useState(0)
+   const Ref = useRef(null);
   // color constants for easy on-the-fly tailwind changes when answer is choosen/incorrect ect
   const red = 'bg-rose-700'
   const green = 'bg-green-500'
@@ -85,13 +82,14 @@ export default function Quizpage() {
   const resetQuestion = () => {
     setQuestionNumber(questionNumber + 1);
     setChosenAnswer("")
-    setTime(15)
-    time = 15
-    startTimer()
+    clearTimer(getDeadTime())
     setRanOnce(false)
     console.log(answerPicked, "answer picked pre resetquestion")
     setAnswerPicked(false)
     console.log(answerPicked, "answer picked post resetquestion")
+    // setTime(15)
+    // time = 15
+    // startTimer()
   }
 
   useEffect(() => {
@@ -99,40 +97,66 @@ export default function Quizpage() {
     // unless you like pain
     // on first run set the questions to local storage
     queryForQuestions()
-    startTimer()
+    // startTimer()
+    clearTimer(getDeadTime())
     // returned function will be called on component unmount
     return () => {
-      stopTimer()
+      // stopTimer()
     }
   }, [])
 
 
-
-
-
-  const startTimer = () => {
-    const interval = setInterval(() => {
-      setTime(time => time - 1)
-      time--
-      console.log(time)
-      console.log(answerPicked)
-      if (time === 0) {
-      clearInterval(interval)
-      }
-    }, 1000)
+const getTimeRemaining = (e) => {
+  const total = Date.parse(e) - Date.parse(new Date());
+  const seconds = Math.floor((total / 1000) % 60);
+  return {
+      total, seconds
+  };
 }
 
 
+const startTimer = (e) => {
+  let { total, seconds }
+              = getTimeRemaining(e);
+  if (total >= 0) {
 
-const stopTimer = () => {
-clearInterval(setTime(0))
-console.log("ya fuckin did it stop timer ran")
+      // update the timer
+      // check if less than 10 then we need to
+      // add '0' at the beginning of the variable
+      setTimer(
+         (seconds > 9 ? seconds : '0' + seconds)
+      )
+  }
 }
 
+const clearTimer = (e) => {
 
-    // just logs for now.... will add points here in a jiff
+  // If you adjust it you should also need to
+  // adjust the Endtime formula we are about
+  // to code next
+  setTimer('15');
+
+  // If you try to remove this line the
+  // updating of timer Variable will be
+  // after 1000ms or 1sec
+  if (Ref.current) clearInterval(Ref.current);
+  const id = setInterval(() => {
+      startTimer(e);
+  }, 1000)
+  Ref.current = id;
+}
+
+const getDeadTime = () => {
+  let deadline = new Date();
+
+  // This is where you need to adjust if
+  // you entend to add more time
+  deadline.setSeconds(deadline.getSeconds() + 15);
+  return deadline;
+}
+
     let checkAnswer = (chosen, answer) => {
-      if (chosen === answer && time > 0) {
+      if (chosen === answer && timer > 0) {
         console.log("...Not bad","questionsFromDatabase[questionNumber].difficulty: ",questionsFromDatabase[questionNumber].difficulty , chosen)
         if (questionsFromDatabase[questionNumber].difficulty === 'easy') {
           setPoints(points + 10)
@@ -142,34 +166,23 @@ console.log("ya fuckin did it stop timer ran")
         }
         if (questionsFromDatabase[questionNumber].difficulty === 'hard') {
           setPoints(points + 30)
-
         }
-      } else {
-        console.log("You're a dumbass","questionsFromDatabase[questionNumber].difficulty: ",questionsFromDatabase[questionNumber].difficulty, chosen)
       }
-      console.log("WIGALEE WOGALEE")
       setAnswerPicked(true)
-      console.log(answerPicked, "answerPicked")
-      stopTimer()
+      setTimer(0)
     }
 
   // memo prevents array from shuffling every second from the timer re-render
   // tailwind css conditionals to be edgy
 
-    // ${answer === chosenAnswer &&
-  //   (answer !== questionsFromDatabase[questionNumber].correctAnswer || time > 0)
-  //   ? blue : (answer === questionsFromDatabase[questionNumber].correctAnswer || time > 0 ? green : red)}
-
-
   const Answers = React.memo(({answers}) => {
     return (
       shuffledArray.map((answer, i) => {
         return (
-        <button className={`w-full py-3 mt-10 ${answer === chosenAnswer &&
-             (answer !== questionsFromDatabase[questionNumber].correctAnswer || time > 0)
-             ? blue : (answer === questionsFromDatabase[questionNumber].correctAnswer || time > 0 ? green : red)} rounded-md
+        <button className={`w-full py-3 mt-10 ${(answer === chosenAnswer && timer > 0 && !answerPicked) || ((timer <= 0 || answerPicked) && chosenAnswer === answer)
+             ? blue : (answer === questionsFromDatabase[questionNumber].correctAnswer || (timer > 0 && !answerPicked) ? green : red)} rounded-md
         font-medium text-white uppercase
-        focus:outline-none hover:ring-2 ring-offset-2 ring-blue-600  focus:outline-none`} key={i} onClick={() => setChosenAnswer(answer)}>{answer}</button>
+        focus:outline-none hover:ring-2 ring-offset-2 ring-blue-600  focus:outline-none`} key={i} onClick={(timer > 0 && !answerPicked) ? () => setChosenAnswer(answer) : ()=> {}}>{answer}</button>
         )
   })
     )
@@ -187,16 +200,11 @@ console.log("ya fuckin did it stop timer ran")
 
    // if the questions are there let's do the thing ... or naw
 
-
-
-
-
-
   return (
     <div className="flex flex-col h-screen bg-gradient-to-b from-[#063970] to-blue-200">
      <span className='text-2xl text-white inline'>Difficulty: {questionsFromDatabase[questionNumber]?.difficulty}</span>
       <span className='text-2xl text-white text-right inline'>Points: {points}</span>
-      <span className='text-2xl text-white text-right inline'>Time: {!answerPicked ? time : 0}</span>
+      <span className='text-2xl text-white text-right inline'>Time: {!answerPicked ? timer : 0}</span>
       <div className='text-2xl text-white text-center'>{questionsFromDatabase[questionNumber]?.question}</div>
     {
     <Answers/>
@@ -204,7 +212,7 @@ console.log("ya fuckin did it stop timer ran")
     {
     <Check/>
     }
-    <button className={`w-full py-3 mt-10 ${time > 0 ? grey : blue} p-3 pl-4 pr-4 rounded-lg font-bold transition duration-500 ease-in-out hover:ring-2 ring-offset-2 ring-gray-600 ${time > 0 ? 'cursor-not-allowed' : ''}`} onClick={time <= 0 || answerPicked ? resetQuestion : () => {}} >next</button>
+    <button className={`w-full py-3 mt-10 ${timer > 0 && !answerPicked ? grey : blue} p-3 pl-4 pr-4 rounded-lg font-bold transition duration-500 ease-in-out hover:ring-2 ring-offset-2 ring-gray-600 ${timer > 0 && !answerPicked ? 'cursor-not-allowed' : ''}`} onClick={timer <= 0 || answerPicked ? resetQuestion : () => {}} >next</button>
 
     </div>
   )

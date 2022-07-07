@@ -4,7 +4,6 @@ import { db } from '../firebase';
 import { async } from '@firebase/util';
 
 export default function Quizpage() {
-
   const [questionNumber, setQuestionNumber] = useState(0);
   // used let for time useState for more flexibility with time checks
   // as well as rendering countdown
@@ -19,31 +18,27 @@ export default function Quizpage() {
   const [points, setPoints] = useState(0)
    const Ref = useRef(null);
   // color constants for easy on-the-fly tailwind changes when answer is choosen/incorrect ect
-  const red = 'bg-rose-700'
-  const green = 'bg-green-500'
-  const blue = 'bg-blue-400'
-  const grey = 'bg-gray-400'
+  const red = 'bg-rose-700';
+  const green = 'bg-green-500';
+  const blue = 'bg-blue-400';
+  const grey = 'bg-gray-400';
 
   // limit only pulls the first 10 questions instead of all of them
   // should be helpful to change questions every day
   async function queryForQuestions() {
-    let returnArr = []
-    const questions = query(
-      collection(db, 'questions'),
-      limit(10)
-    )
-
+    let returnArr = [];
+    const questions = query(collection(db, 'questions'), limit(10));
 
 
     const querySnapshot = await getDocs(questions)
 
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      const data = doc.data()
-      data.id = doc.id
-      returnArr.push(data)
+      const data = doc.data();
+      data.id = doc.id;
+      returnArr.push(data);
     });
-    setQuestionsFromDatabase(returnArr)
+    setQuestionsFromDatabase(returnArr);
   }
 
 
@@ -52,7 +47,6 @@ export default function Quizpage() {
 
 // after every question re-shuffle questions array
   async function setData() {
-
     try {
 
 
@@ -70,7 +64,6 @@ export default function Quizpage() {
     catch(err) {
       // console.error(err)
     }
-
   }
 
   setData()
@@ -170,7 +163,7 @@ const getDeadTime = () => {
       }
       setAnswerPicked(true)
       setTimer(0)
-    }
+  };
 
   // memo prevents array from shuffling every second from the timer re-render
   // tailwind css conditionals to be edgy
@@ -215,8 +208,5 @@ const getDeadTime = () => {
     <button className={`w-full py-3 mt-10 ${timer > 0 && !answerPicked ? grey : blue} p-3 pl-4 pr-4 rounded-lg font-bold transition duration-500 ease-in-out hover:ring-2 ring-offset-2 ring-gray-600 ${timer > 0 && !answerPicked ? 'cursor-not-allowed' : ''}`} onClick={timer <= 0 || answerPicked ? resetQuestion : () => {}} >next</button>
 
     </div>
-  )
-
-
+  );
 }
-

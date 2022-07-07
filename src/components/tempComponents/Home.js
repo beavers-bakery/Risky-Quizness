@@ -1,6 +1,6 @@
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { getUserScore } from "../../contexts/StoreContext";
+import { getTodaysQuestions, getUserScores } from "../../contexts/StoreContext";
 
 function Home() {
   const { user, logout } = useAuth();
@@ -17,14 +17,22 @@ function Home() {
 
   const scoreHandler = async (evt) => {
     evt.preventDefault();
-    const scores = await getUserScore(user.uid);
+    const scores = await getUserScores(user.uid);
     console.log(scores);
+  };
+
+  const queryTest = async (evt) => {
+    evt.preventDefault();
+    await getTodaysQuestions();
   };
 
   return (
     <div>
       <div>
         <button onClick={clickHandler}> clickhere to logout</button>
+      </div>
+      <div>
+        <button onClick={queryTest}>clickhere to test function</button>
       </div>
       <div>
         <button onClick={scoreHandler}> clickhere to console log scores</button>

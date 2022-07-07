@@ -8,10 +8,9 @@ import {
   query,
   where,
   getDocs,
+  Timestamp,
 } from "firebase/firestore";
 import { useContext, createContext } from "react";
-
-const StoreContext = createContext();
 
 export const addUserScore = async function (userId, score, category) {
   const scoreDoc = {
@@ -24,7 +23,7 @@ export const addUserScore = async function (userId, score, category) {
   await addDoc(collection(db, "scores"), scoreDoc);
 };
 
-export const getUserScore = async function (userId) {
+export const getUserScores = async function (userId) {
   const scoresRef = collection(db, "scores");
   const q = query(scoresRef, where("userId", "==", userId));
   const querySnapshot = await getDocs(q);
@@ -34,22 +33,605 @@ export const getUserScore = async function (userId) {
     docObj.scoreId = doc.id;
     scoresArr.push(docObj);
   });
+  console.log(scoresArr);
   return scoresArr;
 };
 
-export function useStore() {
-  return useContext(StoreContext);
-}
+export const getTodaysQuestions = async function () {
+  // get todays date in proper format
+  const today = new Date(Date.now());
+  let DatetoCheck = new Date(today.toDateString());
+
+  // set up query parameters to get
+  const questionsRef = collection(db, "questions");
+  const q = query(questionsRef, where("dateUsed", "==", DatetoCheck));
+  const querySnapshot = await getDocs(q);
+
+  // initialize and populate output array of questions
+  const questionsArr = [];
+  querySnapshot.forEach((doc) => {
+    const docObj = { ...doc.data() };
+    docObj.questionId = doc.id;
+    questionsArr.push(docObj);
+  });
+  return questionsArr;
+};
 
 // initial seeding function below
 export const seedAllQuestions = async function () {
   for (let i = 0; i < questions.length; i++) {
-    await setDoc(doc(db, "questions", rawQuestions[i].id), questions[i]);
+    await setDoc(
+      doc(db, "questions", joinedQuestionsWithDates[i].id),
+      questions[i]
+    );
   }
 };
 
 // Questions array below
 const rawQuestions = [
+  {
+    category: "Society & Culture",
+    id: "62ab32ea5202de619af28130",
+    correctAnswer: "Honda",
+    incorrectAnswers: ["Land Rover", "Cadillac", "Ford"],
+    question: "The Civic is a model of car made by which manufacturer?",
+    tags: ["motoring", "business", "society_and_culture"],
+    type: "Multiple Choice",
+    difficulty: "medium",
+    regions: [],
+  },
+  {
+    category: "Geography",
+    id: "623b5824fd6c701a9211839e",
+    correctAnswer: "Greece",
+    incorrectAnswers: ["Jordan", "Turkey", "Belgium"],
+    question:
+      "In which country would you find the UNESCO World Heritage site of Delphi?",
+    tags: ["geography"],
+    type: "Multiple Choice",
+    difficulty: "medium",
+    regions: [],
+  },
+  {
+    category: "Film & TV",
+    id: "6256f9f19da29df7b05f72ed",
+    correctAnswer: "Coco",
+    incorrectAnswers: ["Gone Girl", "The Usual Suspects", "Aliens"],
+    question:
+      "Name the movie that matches the following plot summary: 'An aspiring musician enters the Land of the Dead to find his great-great-grandfather, a legendary singer.'",
+    tags: ["film", "film_and_tv"],
+    type: "Multiple Choice",
+    difficulty: "medium",
+    regions: [],
+  },
+  {
+    category: "Geography",
+    id: "623740d0cb85f7ce9e949d25",
+    correctAnswer: "Ireland",
+    incorrectAnswers: ["Italy", "Hungary", "Latvia"],
+    question: "Dublin is the capital city of which country?",
+    tags: ["capital_cities", "cities", "general_knowledge", "geography"],
+    type: "Multiple Choice",
+    difficulty: "medium",
+    regions: [],
+  },
+  {
+    category: "Society & Culture",
+    id: "6293ebaf7f41d6338b96eeb8",
+    correctAnswer: "Mathematician and scientist.",
+    incorrectAnswers: [
+      "Victorian novelist.",
+      "The first sailor to circumnavigate the earth.",
+      "Surgeon who pioneered the use of sterilisation and antiseptic.",
+    ],
+    question: "Which of the following describes Isaac Newton?",
+    tags: ["people", "society_and_culture"],
+    type: "Multiple Choice",
+    difficulty: "medium",
+    regions: [],
+  },
+  {
+    category: "Geography",
+    id: "62602e5c4b176d54800e3cd5",
+    correctAnswer: "Monterrey",
+    incorrectAnswers: ["Recife", "Guatemala City", "Bogotá"],
+    question: "Which of these cities is in Mexico?",
+    tags: ["cities", "geography"],
+    type: "Multiple Choice",
+    difficulty: "medium",
+    regions: [],
+  },
+  {
+    category: "Film & TV",
+    id: "622a1c377cc59eab6f9507ca",
+    correctAnswer: "Nicolas Cage",
+    incorrectAnswers: ["Tom Hanks", "Johnny Depp", "Ewan McGregor"],
+    question:
+      "Which actor has featured in films including National Treasure and Kick-Ass?",
+    tags: ["film", "acting", "film_and_tv"],
+    type: "Multiple Choice",
+    difficulty: "medium",
+    regions: [],
+  },
+  {
+    category: "Geography",
+    id: "625e9fcd796f721e95543fb8",
+    correctAnswer: "Blue with a yellow cross extending to the edges.",
+    incorrectAnswers: [
+      "Red with a white crescent moon and star.",
+      "Three equal horizontal bands of red blue and orange.",
+      "Red with a black two headed eagle in the center.",
+    ],
+    question: "What does the flag of Sweden look like?",
+    tags: ["flags", "europe", "geography"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Science",
+    id: "622a1c377cc59eab6f950599",
+    correctAnswer: "the Assyrians",
+    incorrectAnswers: [
+      "Egyptian hieroglyphics, an ancient writing system",
+      "fermentation",
+      "Japanese people",
+    ],
+    question: "What is Assyriology the study of?",
+    tags: ["science"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Sport & Leisure",
+    id: "62417ce60f96c4efe8d77390",
+    correctAnswer: "Chicago Bulls",
+    incorrectAnswers: [
+      "Chicago Blackhawks",
+      "Chicago Flyers",
+      "Chicago Nationals",
+    ],
+    question: "Which of these is a basketball team based in Chicago?",
+    tags: ["sport"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Science",
+    id: "624333a2cfaae40c129613f4",
+    correctAnswer: "A Doe",
+    incorrectAnswers: ["A Pen", "A Mare", "A Nanny"],
+    question: "A female deer is known as what?",
+    tags: ["science"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Society & Culture",
+    id: "622a1c367cc59eab6f9503dd",
+    correctAnswer: "Garlic",
+    incorrectAnswers: ["Chili", "A Crucifix", "Silver"],
+    question: "What Is Worn Around The Neck To Keep Vampires Away?",
+    tags: ["society_and_culture"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Film & TV",
+    id: "622a1c347cc59eab6f94fc37",
+    correctAnswer: "'There's no place like home.'",
+    incorrectAnswers: [
+      "'Oh, Jerry, don't let's ask for the moon. We have the stars.'",
+      "'I’m already pregnant. So, what other shenanigans could I get myself into?'",
+      "'This is the day you will always remember as the day you almost caught Captain Jack Sparrow!'",
+    ],
+    question: "Which of these quotes is from the film 'The Wizard of Oz'?",
+    tags: ["film", "quotes", "film_and_tv"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "History",
+    id: "622a1c3c7cc59eab6f951b1c",
+    correctAnswer: "Babylon",
+    incorrectAnswers: ["Atlantis", "Jerusalem", "Jericho"],
+    question: "In which city were the Hanging Gardens?",
+    tags: ["history"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Arts & Literature",
+    id: "622a1c397cc59eab6f950eb1",
+    correctAnswer: "J. K. Rowling",
+    incorrectAnswers: ["Christopher Tolkien", "Philip Pullman", "C. S. Lewis"],
+    question: "Which author wrote 'Harry Potter and the Chamber of Secrets'?",
+    tags: [
+      "harry_potter",
+      "literature",
+      "general_knowledge",
+      "arts_and_literature",
+    ],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Society & Culture",
+    id: "6293ebdf7f41d6338b96eec6",
+    correctAnswer:
+      "Scientist who proposed and popularised the theory of evolution.",
+    incorrectAnswers: [
+      "Conquistador who claimed Inca lands for Spain.",
+      "Influential Christian saint and writer, who shaped much of Western Christian thought.",
+      "Victoria era novelist who wrote many popular books.",
+    ],
+    question: "Which of the following describes Charles Darwin?",
+    tags: ["people", "history", "society_and_culture", "general_knowledge"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Geography",
+    id: "622a1c387cc59eab6f950aa4",
+    correctAnswer: "United States of America",
+    incorrectAnswers: ["El Salvador", "Honduras", "Nicaragua"],
+    question: "Which of these countries borders Mexico?",
+    tags: ["central_america", "general_knowledge", "geography"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Music",
+    id: "625063d7e12f6dec240bdf86",
+    correctAnswer: "Nothing Compares 2 U",
+    incorrectAnswers: ["Whoomp! (There It Is)", "Whip It", "Bust a Move"],
+    question: "What song did Sinead O'Connor have a hit with in 1990?",
+    tags: ["songs", "one_hit_wonders", "music"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Society & Culture",
+    id: "62ab32c15202de619af28124",
+    correctAnswer: "Ford",
+    incorrectAnswers: ["Alfa Romeo", "BMW", "Austin"],
+    question: "Which car manufacturer makes the Mustang?",
+    tags: ["motoring", "business", "society_and_culture"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Film & TV",
+    id: "622a1c347cc59eab6f94fbcd",
+    correctAnswer: "'With great power comes great responsiblity.'",
+    incorrectAnswers: [
+      "'I love lamp.'",
+      "'Which would be worse, to live a monster or die as a good man?'",
+      "'La-dee-da, la-dee-da.'",
+    ],
+    question: "Which of these quotes is from the film 'Spider-Man'?",
+    tags: ["quotes", "film", "marvel", "film_and_tv"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Society & Culture",
+    id: "62628864014f58b5fc1a3fd6",
+    correctAnswer: "There are some things money can't buy",
+    incorrectAnswers: [
+      "Everywhere you want to be",
+      "Because Change Happens",
+      "The World's Local Bank",
+    ],
+    question: "What is the marketing slogan of Mastercard?",
+    tags: ["business", "marketing", "society_and_culture"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Geography",
+    id: "6233843e62eaad73716a8bf7",
+    correctAnswer: "The Ganges",
+    incorrectAnswers: ["The Indus", "The Brahmaputra", "The Krishna"],
+    question: "What is the most sacred river in India?",
+    tags: ["rivers", "bodies_of_water", "religion", "hinduism", "geography"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Geography",
+    id: "625e9e18796f721e95543f3e",
+    correctAnswer: "White",
+    incorrectAnswers: ["Maroon", "Orange", "Gold"],
+    question: "Which of these colors is included on the flag of Canada?",
+    tags: ["flags", "canada", "geography"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Music",
+    id: "622a1c357cc59eab6f94fed6",
+    correctAnswer: "Mariah Carey",
+    incorrectAnswers: ["Drake", "Nicki Minaj", "Madonna"],
+    question:
+      "Which American singer and songwriter released the song 'All I Want for Christmas Is You'?",
+    tags: ["christmas", "music"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Science",
+    id: "622a1c3e7cc59eab6f9522cb",
+    correctAnswer: "Hydroponics",
+    incorrectAnswers: ["Aquonics", "Horticulture", "Waterculture"],
+    question:
+      "What is the name given to the practice of growing plants in liquids rather than soil?",
+    tags: ["plants", "science", "words"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Film & TV",
+    id: "622a1c367cc59eab6f9501fe",
+    correctAnswer: "Quentin Tarantino",
+    incorrectAnswers: ["Steven Spielberg", "Woody Allen", "Martin Scorsese"],
+    question: "Which director directed Pulp Fiction?",
+    tags: ["film_and_tv"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "History",
+    id: "622a1c3c7cc59eab6f951a90",
+    correctAnswer: "A Gladiator",
+    incorrectAnswers: ["A Centurion", "A Dominus", "A Caesar"],
+    question:
+      "What was the name of someone who fought professionally in Roman arenas?",
+    tags: ["history"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Food & Drink",
+    id: "624c609c50d1a5e051325a67",
+    correctAnswer: "India",
+    incorrectAnswers: ["Scotland", "Cameroon", "Mauritius"],
+    question:
+      "Tandoori Chicken is a dish that is most associated with which part of the world?",
+    tags: ["food", "food_and_drink"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Geography",
+    id: "62602d584b176d54800e3c91",
+    correctAnswer: "Italy",
+    incorrectAnswers: ["Iceland", "Finland", "Slovakia"],
+    question: "In which country is the city of Rome?",
+    tags: ["cities", "europe", "geography"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Arts & Literature",
+    id: "622a1c367cc59eab6f950167",
+    correctAnswer: "Charles Dickens",
+    incorrectAnswers: ["Thomas Hardy", "James Joyce", "Emily Brontë"],
+    question: "Who wrote 'A Christmas Carol'?",
+    tags: ["arts_and_literature"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Music",
+    id: "622a1c3d7cc59eab6f951c76",
+    correctAnswer: "Chestnuts",
+    incorrectAnswers: ["Onions", "Turkey", "Marshmallows"],
+    question:
+      "According to 'A Christmas Song'', what would you find roasting over an open fire?",
+    tags: ["music"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Arts & Literature",
+    id: "622a1c3a7cc59eab6f951340",
+    correctAnswer: "Caricature",
+    incorrectAnswers: ["Satire", "Still Life", "Snappy Shot"],
+    question:
+      "What is the word for an artwork humoously excaggerating the qualities of a person?",
+    tags: ["words", "art", "arts_and_literature"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Arts & Literature",
+    id: "622a1c397cc59eab6f950f48",
+    correctAnswer: "J. R. R. Tolkien",
+    incorrectAnswers: ["G. K. Chesterton", "Philip Pullman", "C. S. Lewis"],
+    question: "Which author wrote 'The Hobbit'?",
+    tags: [
+      "fantasy",
+      "literature",
+      "people",
+      "general_knowledge",
+      "arts_and_literature",
+    ],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Geography",
+    id: "6233883c0161109f922aac74",
+    correctAnswer: "Asia",
+    incorrectAnswers: ["North America", "Africa", "Antarctica"],
+    question: "Which is the Earth's largest continent?",
+    tags: ["geography"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Music",
+    id: "6266bb3bff7b6ee0496ec786",
+    correctAnswer: "Percussion",
+    incorrectAnswers: ["Stringed", "Woodwind", "Brass"],
+    question: "What type of instrument is a cowbell?",
+    tags: ["music"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Science",
+    id: "622a1c377cc59eab6f950551",
+    correctAnswer: "the ancient Egyptians",
+    incorrectAnswers: [
+      "shells and of molluscs",
+      "the kidneys and their diseases, a branch of medicine",
+      "anesthesia and anesthetics; a branch of medicine",
+    ],
+    question: "What is Egyptology the study of?",
+    tags: ["words", "science"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Sport & Leisure",
+    id: "622a1c367cc59eab6f950026",
+    correctAnswer: "Baseball",
+    incorrectAnswers: ["Basketball", "American Football", "Soccer"],
+    question: "With which sport is Babe Ruth associated?",
+    tags: ["sport", "people", "general_knowledge"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Film & TV",
+    id: "625740109da29df7b05f73c1",
+    correctAnswer:
+      "An NYPD officer tries to save his wife taken hostage by terrorists during a Christmas party.",
+    incorrectAnswers: [
+      "In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler.",
+      "The story of how the scandal of child molestation within the Boston Catholic church was uncovered.",
+      "A rat makes an unusual alliance with a young kitchen worker at a famous restaurant.",
+    ],
+    question: "What is the plot of the movie Die Hard?",
+    tags: ["film", "film_and_tv"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Arts & Literature",
+    id: "622a1c397cc59eab6f950ea9",
+    correctAnswer: "J. K. Rowling",
+    incorrectAnswers: ["Christopher Tolkien", "Philip Pullman", "C. S. Lewis"],
+    question: "Which author wrote 'Harry Potter and the Cursed Child'?",
+    tags: ["arts_and_literature"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Science",
+    id: "622a1c377cc59eab6f950534",
+    correctAnswer: "the future",
+    incorrectAnswers: ["flow", "bryophytes", "drugs"],
+    question: "What is Futurology the study of?",
+    tags: ["words", "science"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Society & Culture",
+    id: "622a1c367cc59eab6f95012a",
+    correctAnswer: "Olympus",
+    incorrectAnswers: ["Sinai", "Everest", "Marathon"],
+    question: "Which Greek mountain was known as the home of the gods?",
+    tags: [
+      "mythology",
+      "ancient_greece",
+      "classics",
+      "general_knowledge",
+      "society_and_culture",
+    ],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Society & Culture",
+    id: "6293ec167f41d6338b96eed6",
+    correctAnswer: "King of Macedonia and military leader.",
+    incorrectAnswers: [
+      "Principal figure of Jainism.",
+      "Leader of the Russian Revolution and new Communist regime from 1917 to 1924.",
+      "French military and political leader.",
+    ],
+    question: "Which of the following describes Alexander the Great?",
+    tags: [
+      "people",
+      "history",
+      "society_and_culture",
+      "general_knowledge",
+      "leaders",
+    ],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Music",
+    id: "6266bc6ab0e62e469cf43e93",
+    correctAnswer: "Ukelele",
+    incorrectAnswers: ["Ocarina", "Clarinet", "Castanets"],
+    question: "Which of these is a stringed instrument?",
+    tags: ["music"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
+  {
+    category: "Society & Culture",
+    id: "6293ece67f41d6338b96ef13",
+    correctAnswer: "Menes",
+    incorrectAnswers: ["Rene Descartes", "Imhotep", "Diogenes"],
+    question:
+      "Which influential historical person was an Egyptian pharaoh who united Upper and Lower Egypt to found the First Dynasty?",
+    tags: ["people", "history", "society_and_culture", "ancient_egypt"],
+    type: "Multiple Choice",
+    difficulty: "easy",
+    regions: [],
+  },
   {
     category: "Film & TV",
     id: "622a1c377cc59eab6f950798",
@@ -2590,7 +3172,44 @@ const rawQuestions = [
   },
 ];
 
-const questions = rawQuestions.map((question) => {
+let easyQuestions = rawQuestions.filter((q) => q.difficulty === "easy"); // 46
+let mediumQuestions = rawQuestions.filter((q) => q.difficulty === "medium"); //80
+let hardQuestions = rawQuestions.filter((q) => q.difficulty === "hard"); // 121
+
+let startDate = new Date("July 7, 2022");
+// 1 day is 24hrs * 60min * 60sec * 1000 milliseeconds
+let oneDayDiff = 24 * 60 * 60 * 1000;
+
+//add use Dates to each question
+for (let i = 0; i < easyQuestions.length; i++) {
+  // 2 easy ques. per day
+  let x = Math.floor(i / 2);
+  const q = easyQuestions[i];
+  const updatedDate = new Date(startDate.getTime() + oneDayDiff * x);
+  q.dateUsed = Timestamp.fromDate(updatedDate);
+}
+for (let i = 0; i < mediumQuestions.length; i++) {
+  // 4 medium ques. per day
+  let x = Math.floor(i / 4);
+  const q = mediumQuestions[i];
+  const updatedDate = new Date(startDate.getTime() + oneDayDiff * x);
+  q.dateUsed = Timestamp.fromDate(updatedDate);
+}
+for (let i = 0; i < hardQuestions.length; i++) {
+  // 6 medium ques. per day
+  let x = Math.floor(i / 4);
+  const q = hardQuestions[i];
+  const updatedDate = new Date(startDate.getTime() + oneDayDiff * x);
+  q.dateUsed = Timestamp.fromDate(updatedDate);
+}
+// join arrays
+const joinedQuestionsWithDates = [
+  ...easyQuestions,
+  ...mediumQuestions,
+  ...hardQuestions,
+];
+
+const questions = joinedQuestionsWithDates.map((question) => {
   let q = { ...question };
   delete q.id;
   return q;

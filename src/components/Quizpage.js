@@ -79,8 +79,6 @@ export default function Quizpage() {
 
   // go ahead and run that mama-jama
 
- 
-
   // reset a bunch of stuff after every question
   const resetQuestion = () => {
     setQuestionNumber(questionNumber + 1);

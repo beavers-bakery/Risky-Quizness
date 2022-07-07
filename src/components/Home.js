@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   const { user, logout } = useAuth();
+  console.log(user)
 
   return (
     <>
@@ -13,7 +14,7 @@ const Home = () => {
               Profile
             </h2>
           </Link>
-          <strong>Email:</strong> {user?.email}
+          <strong>Player: {user?.displayName} </strong>
           <hr />
           <strong>Best Score:</strong> {user?.scores}
           <hr />

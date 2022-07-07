@@ -7,6 +7,7 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
+  const usernameRef = useRef();
   const navigate = useNavigate();
   const { signup } = useAuth();
 
@@ -18,15 +19,13 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
     e.preventDefault();
     try {
       setError("");
-      await signup(emailRef.current.value, passwordRef.current.value);
+      await signup(emailRef.current.value, passwordRef.current.value, usernameRef.current.value);
       navigate("/");
     } catch (err) {
       console.error(err);
       setError(err.message);
     }
   };
-
-
 
   return (
     <div className="border-2 shadow-md rounded-md w-[400px] bg-white">
@@ -56,6 +55,14 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
               id="signup-email"
               placeholder="Email"
               ref={emailRef}
+              className="mt-4 h-10 border-2 rounded-md p-2 w-[350px]"
+            />
+          </div>
+          <div>
+            <input
+              id="signup-username"
+              placeholder="Username"
+              ref={usernameRef}
               className="mt-4 h-10 border-2 rounded-md p-2 w-[350px]"
             />
           </div>

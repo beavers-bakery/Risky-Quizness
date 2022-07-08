@@ -7,8 +7,9 @@ import {
   getFirestore,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { async } from "@firebase/util";
 import { getTodaysQuestions } from "../contexts/StoreContext";
+import { useNavigate } from "react-router-dom";
+import Result from "./Result";
 
 export default function Quizpage() {
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -24,6 +25,7 @@ export default function Quizpage() {
   let [answerPicked, setAnswerPicked] = useState(false);
   const [points, setPoints] = useState(0);
   const Ref = useRef(null);
+  const navigate = useNavigate();
   // color constants for easy on-the-fly tailwind changes when answer is choosen/incorrect ect
   const red = "bg-rose-700";
   const green = "bg-green-500";
@@ -63,16 +65,22 @@ export default function Quizpage() {
 
   // reset a bunch of stuff after every question
   const resetQuestion = () => {
-    setQuestionNumber(questionNumber + 1);
-    setChosenAnswer("");
-    clearTimer(getDeadTime());
-    setRanOnce(false);
-    console.log(answerPicked, "answer picked pre resetquestion");
-    setAnswerPicked(false);
-    console.log(answerPicked, "answer picked post resetquestion");
-    // setTime(15)
-    // time = 15
-    // startTimer()
+    if (questionNumber === questionsFromDatabase.length - 1) {
+      console.log("we're trying to navigate");
+      console.log("the pioints being passed are: ", points);
+      navigate("/result", { state: { points } });
+    } else {
+      setQuestionNumber(questionNumber + 1);
+      setChosenAnswer("");
+      clearTimer(getDeadTime());
+      setRanOnce(false);
+      console.log(answerPicked, "answer picked pre resetquestion");
+      setAnswerPicked(false);
+      console.log(answerPicked, "answer picked post resetquestion");
+      // setTime(15)
+      // time = 15
+      // startTimer()
+    }
   };
 
   useEffect(() => {
@@ -216,6 +224,9 @@ export default function Quizpage() {
     <div className="flex flex-col h-screen bg-gradient-to-b from-[#063970] to-blue-200">
       <span className="text-2xl text-white inline">
         Difficulty: {questionsFromDatabase[questionNumber]?.difficulty}
+      </span>
+      <span className="text-2xl text-white inline">
+        Question: {questionNumber + 1} / {questionsFromDatabase.length}
       </span>
       <span className="text-2xl text-white text-right inline">
         Points: {points}

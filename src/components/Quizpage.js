@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { collection, getDocs, query, limit } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  limit,
+  getFirestore,
+} from "firebase/firestore";
 import { db } from "../firebase";
-import Result from "./Result";
+import { getTodaysQuestions } from "../contexts/StoreContext";
 import { useNavigate } from "react-router-dom";
+import Result from "./Result";
 
 export default function Quizpage() {
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -11,7 +18,7 @@ export default function Quizpage() {
   const [timer, setTimer] = useState("15");
   // ranOnce for checks after each question
   const [ranOnce, setRanOnce] = useState(false);
-  // shuffle incorrect and correct answers into an arraygit branch
+  // shuffle incorrect and correct answers into an array
   const [shuffledArray, setShuffledArray] = useState([]);
   const [questionsFromDatabase, setQuestionsFromDatabase] = useState([]);
   let [chosenAnswer, setChosenAnswer] = useState("");
@@ -28,18 +35,8 @@ export default function Quizpage() {
   // limit only pulls the first 10 questions instead of all of them
   // should be helpful to change questions every day
   async function queryForQuestions() {
-    let returnArr = [];
-    const questions = query(collection(db, "questions"), limit(10));
-
-    const querySnapshot = await getDocs(questions);
-
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      const data = doc.data();
-      data.id = doc.id;
-      returnArr.push(data);
-    });
-    setQuestionsFromDatabase(returnArr);
+    const questions = await getTodaysQuestions();
+    setQuestionsFromDatabase(questions);
   }
 
   // after every question re-shuffle questions array

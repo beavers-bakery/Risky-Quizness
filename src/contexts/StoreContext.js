@@ -10,7 +10,6 @@ import {
   getDocs,
   Timestamp,
 } from "firebase/firestore";
-import { useContext, createContext } from "react";
 
 export const addUserScore = async function (userId, score, category) {
   const scoreDoc = {

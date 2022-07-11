@@ -58,6 +58,7 @@ export const AuthProvider = ({ children }) => {
 
     await updateDoc(doc(db, "users", auth.currentUser.uid), {
       email: auth.currentUser.email,
+      username: displayNameChange,
     });
   };
 

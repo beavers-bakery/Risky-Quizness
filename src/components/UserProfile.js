@@ -1,34 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { db } from "../firebase";
-import { collection, where, query, getDocs } from "firebase/firestore";
+import { getUserScores } from "../contexts/StoreContext";
 import EditProfile from "./EditProfile";
 
 const UserProfile = () => {
   const [scores, setScores] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const scoresRef = collection(db, "scores");
-  const userScoresQuery = query(
-    scoresRef,
-    where("userId", "==", user.uid || "")
-  );
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
+    setUserInfo({ email: user?.email, displayName: user?.displayName });
     const getScores = async () => {
-      const scoresSnapshot = await getDocs(userScoresQuery);
-      const userScores = scoresSnapshot.docs.map((doc) => {
-        return doc.data();
-      });
+      const userScores = await getUserScores(user?.uid);
       setScores(userScores);
     };
     getScores();
   }, [user]);
 
   const handleClick = () => {
-    
     setShowEditModal(!showEditModal);
   };
 
@@ -39,6 +29,7 @@ const UserProfile = () => {
           <EditProfile
             showEditModal={showEditModal}
             setShowEditModal={setShowEditModal}
+            setUserInfo={setUserInfo}
           />
         </div>
       )}
@@ -54,8 +45,8 @@ const UserProfile = () => {
           >
             <h2 className="font-bold text-xl mb-4">User Information</h2>
             <h2>Name: </h2>
-            <h2>Email: {user?.email}</h2>
-            <h2>Display Name: {user?.displayName}</h2>
+            <h2>Email: {userInfo.email}</h2>
+            <h2>Display Name: {userInfo.displayName}</h2>
             <button
               className="border-2 rounded-md px-8 py-2 bg-green-600 text-white mt-2"
               onClick={handleClick}

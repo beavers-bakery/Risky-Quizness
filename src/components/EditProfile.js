@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
-const EditProfile = ({ showEditModal, setShowEditModal }) => {
+const EditProfile = ({ showEditModal, setShowEditModal, setUserInfo }) => {
   const [error, setError] = useState("");
   const nameRef = useRef();
   const emailRef = useRef();
@@ -18,9 +18,13 @@ const EditProfile = ({ showEditModal, setShowEditModal }) => {
     try {
       setError("");
       editProfile(displayNameRef.current.value, emailRef.current.value);
+      setUserInfo({
+        email: emailRef.current.value,
+        displayName: displayNameRef.current.value,
+      });
       setShowEditModal(!showEditModal);
     } catch (err) {
-      setError("");
+      setError(err);
     }
   };
 

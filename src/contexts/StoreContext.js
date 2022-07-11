@@ -48,7 +48,6 @@ export const getUserScores = async function (userId) {
     docObj.scoreId = doc.id;
     scoresArr.push(docObj);
   });
-  console.log(scoresArr);
   return scoresArr;
 };
 

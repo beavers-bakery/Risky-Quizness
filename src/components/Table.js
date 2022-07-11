@@ -4,8 +4,8 @@ const Table = ({ scores }) => {
       <div className='bg-[#00CC99]' sx={{ minWidth: 650 }}>
         {scores?.length > 0 && (
           <header className='bg-[#00CC99]'>
-            <tr>
-              <th className='font-serif text-red-200 items-center justify-center'>Today's Top 3 Scores</th>
+            <tr className="shadow-md">
+              <th className='font-serif text-red-200 items-center justify-center border-y-2 border-l-2 rounded-md rounded-r-none text-center py-4'>Today's Top 3 Scores</th>
             </tr>
           </header>
         )}
@@ -13,7 +13,7 @@ const Table = ({ scores }) => {
           scores.map((score) => {
             return (
               <tr className="font-serif text-gray-500 mt-44">
-                <td className="p-20 m-15 h-120">Player Score: {score}</td>
+                <td className="border-y-2 border-l-2 rounded-md rounded-r-none text-center py-4">Player Score: {score}</td>
               </tr>
             );
           })

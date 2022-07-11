@@ -4,7 +4,7 @@ import LeaderboardRow from "./LeaderboardRow";
 
 const Leaderboard = () => {
   const [scores, setScores] = useState([]);
-  const [period, setPeriod] = useState(1);
+  const [period, setPeriod] = useState("0");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -23,8 +23,11 @@ const Leaderboard = () => {
     previous.setDate(previous.getDate() - between);
 
     const filter = data.filter((val) => {
-      const userDate = new Date(val.createdAt?.seconds * 1000);
-      if (between === "0") return val;
+      const userDate = new Date(val.createdAt.seconds * 1000);
+      if (between === "1000") return val;
+      if (between === "0") {
+        return userDate.toDateString() === today.toDateString();
+      }
       return previous <= userDate && today >= userDate;
     });
 
@@ -42,36 +45,36 @@ const Leaderboard = () => {
       ) : (
         <>
           <h2 className="text-center m-4 font-bold text-3xl">Leaderboard</h2>
+          <div className="flex justify-center items-center">
+            <button
+              onClick={handleClick}
+              data-id="1000"
+              value="all_time"
+              className="shadow-sm rounded-md py-1 px-4 m-2 bg-green-600 text-white"
+            >
+              All Time
+            </button>
+            <button
+              onClick={handleClick}
+              data-id="7"
+              value="this_week"
+              className="shadow-sm border-2 rounded-md py-1 px-4 m-2 bg-green-600 text-white"
+            >
+              This Week
+            </button>
+            <button
+              onClick={handleClick}
+              data-id="0"
+              value="today"
+              className="shadow-sm border-2 rounded-md py-1 px-4 m-2 bg-green-600 text-white"
+            >
+              Today
+            </button>
+          </div>
           {between(scores, period).length < 1 ? (
             <h2>No Scores Available Yet</h2>
           ) : (
             <>
-              <div className="flex justify-center items-center">
-                <button
-                  onClick={handleClick}
-                  data-id="0"
-                  value="all_time"
-                  className="shadow-sm rounded-md py-1 px-4 m-2 bg-green-600 text-white"
-                >
-                  All Time
-                </button>
-                <button
-                  onClick={handleClick}
-                  data-id="7"
-                  value="this_week"
-                  className="shadow-sm border-2 rounded-md py-1 px-4 m-2 bg-green-600 text-white"
-                >
-                  This Week
-                </button>
-                <button
-                  onClick={handleClick}
-                  data-id="1"
-                  value="today"
-                  className="shadow-sm border-2 rounded-md py-1 px-4 m-2 bg-green-600 text-white"
-                >
-                  Today
-                </button>
-              </div>
               <table className="w-screen m-4 border-separate border-spacing-y-2 table-auto max-w-[900px]">
                 <tbody>
                   <tr className="shadow-md">

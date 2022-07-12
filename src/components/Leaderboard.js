@@ -117,20 +117,20 @@ const Leaderboard = () => {
                   })}
                 </tbody>
               </table>
+              <div>
+                {loadMoreLoading ? (
+                  <h2 className="text-white text-lg">Loading More...</h2>
+                ) : (
+                  <button
+                    onClick={handleLoadMore}
+                    className="border-2 rounded-lg py-1 px-4 text-white bg-purple-400"
+                  >
+                    Load More
+                  </button>
+                )}
+              </div>
             </>
           )}
-          <div>
-            {loadMoreLoading ? (
-              <h2 className="text-white text-lg">Loading More...</h2>
-            ) : (
-              <button
-                onClick={handleLoadMore}
-                className="border-2 rounded-lg py-1 px-4 text-white bg-purple-400"
-              >
-                Load More
-              </button>
-            )}
-          </div>
         </>
       )}
     </div>

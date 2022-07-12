@@ -99,6 +99,7 @@ export default function Quizpage() {
     return () => {
       // stopTimer()
     };
+    // eslint-disable-next-line
   }, []);
 
   const getTimeRemaining = (e) => {
@@ -183,7 +184,7 @@ export default function Quizpage() {
                ((timer <= 0 || answerPicked) && answer === questionsFromDatabase[questionNumber].correctAnswer ? green : transparent)
           } rounded-md
         font-medium text-white uppercase
-        focus:outline-none hover:ring-2 ring-offset-2 ring-blue-600  focus:outline-none`}
+        focus:outline-none hover:ring-2 ring-offset-2 ring-blue-600`}
           key={i}
           onClick={
             timer > 0 && !answerPicked

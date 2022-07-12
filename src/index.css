@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-  background: url(../public/Quizpage3.jpeg) no-repeat center;
+  background: url(../public/back.jpeg) no-repeat center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -36,3 +36,37 @@ html {
     opacity: 0;
   }
 }
+
+
+@font-face {
+  font-family: neon;
+  src: url(../public/NEON.TTF);
+}
+.neon-wrapper {
+  box-shadow:
+  0 0 0.1vw  0.4vw #fff7f7,
+  0 0 0.4vw  0.6vw #e50bb9,
+  0 0   4vw  0.4vw #b457f2,
+
+  inset 0 0 1.5vw  0.4vw #b457f2,
+  inset 0 0 0.4vw  0.2vw #e50bb9,
+  inset 0 0 0.5vw  0.2vw #fff7f7;
+  border-radius: 1.5rem;
+}
+.neon-text {
+  font-family:neon;
+  font-size: 3rem;
+  color: #ffd8d8;
+  padding: 0 3.5rem 0 3.5rem;
+  text-shadow:
+  .1vw 0vw .25vw #ffd8d8, .2vw 0vw .25vw #ffd8d8, .4vw 0vw .25vw #ffd8d8,
+
+  .1vw 0vw   0vw #578df2, .2vw 0vw   0vw #578df2, .4vw 0vw   0vw #b457f2,
+  .1vw 0vw  .1vw #578df2, .2vw 0vw  .1vw #b457f2, .4vw 0vw  .1vw #b457f2,
+  .1vw 0vw   2vw #b457f2, .2vw 0vw   2vw #b457f2, .4vw 0vw   2vw #b457f2,
+
+  .1vw 0vw   1vw #e50bb9, .2vw 0vw   1vw #e50bb9, .4vw 0vw   5vw #e50bb9,
+  .1vw 0vw   5vw #e50bb9, .2vw 0vw  20vw #e50bb9, .4vw 0vw  10vw #e50bb9,
+  .1vw 0vw  10vw #e50bb9, .2vw 0vw  30vw #e50bb9, .4vw 0vw  10vw #e50bb9;
+}
+

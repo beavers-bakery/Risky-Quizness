@@ -170,7 +170,7 @@ export default function Quizpage() {
     return shuffledArray.map((answer, i) => {
       return (
         <button
-          className={`flex justify-center gap-4 py-8 mt-4 ${
+          className={`flex justify-center gap-4 py-8 mt-4${
             (answer === chosenAnswer && timer > 0 && !answerPicked)
               ? blue
               : answer === chosenAnswer && (timer <= 0 || answerPicked) && answer !== questionsFromDatabase[questionNumber].correctAnswer
@@ -204,7 +204,6 @@ export default function Quizpage() {
                   questionsFromDatabase[questionNumber].correctAnswer
                 )
             : () => {
-                console.log("CHECK ANSWER DOESNT WORK... good");
               }
         }
       >
@@ -233,7 +232,6 @@ export default function Quizpage() {
       Time: {!answerPicked ? timer : 0}
       </span>
     </div>
-
    { isRight && (timer <= 0 || answerPicked) ?
     <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
     <br className="block md:hidden" />
@@ -250,25 +248,25 @@ export default function Quizpage() {
 
   ( !isRight && (timer <= 0 || answerPicked) ?
 
-  <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+  <div className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
   <br className="block md:hidden" />
-  <span
-    className="inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
+  <h1
+    className="neon-text inline-flex h-16 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
   >
     Try Again!
-  </span>
+  </h1>
   <span
     className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"
   ></span>
-</h1>
+</div>
 
   :
-  <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">Good Luck!</h1>
+  <h1 className="neon-text mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">Good Luck!</h1>
   )
 
 }
 
-    <div className="grid h-screen place-items-center">
+    <div className="grid h-screen place-items-center neon-wrapper">
     <div className="my-6 text-center w-4/6">
       <div className="text-2xl text-white">
         {questionsFromDatabase[questionNumber]?.question}

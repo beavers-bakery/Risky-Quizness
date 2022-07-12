@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  collection,
-  getDocs,
-  query,
-  limit,
-  getFirestore,
-} from "firebase/firestore";
-import { db } from "../firebase";
 import { getTodaysQuestions } from "../contexts/StoreContext";
 import { useNavigate } from "react-router-dom";
-import Result from "./Result";
 
 export default function Quizpage() {
   const [questionNumber, setQuestionNumber] = useState(0);

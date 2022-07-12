@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import Result from "./Result";
 
 export default function Quizpage() {
+  // let background = document.getElementById("background")
+  // background.style.backgroundImage = "url('./Quizpage.jpeg')"
   const [questionNumber, setQuestionNumber] = useState(0);
   // used let for time useState for more flexibility with time checks
   // as well as rendering countdown
@@ -31,6 +33,7 @@ export default function Quizpage() {
   const green = "bg-green-500";
   const blue = "bg-blue-400";
   const grey = "bg-gray-400";
+  const transparent = "--tw-bg-opacity: 1"
 
   // limit only pulls the first 10 questions instead of all of them
   // should be helpful to change questions every day
@@ -169,15 +172,12 @@ export default function Quizpage() {
     return shuffledArray.map((answer, i) => {
       return (
         <button
-          className={`w-full py-3 mt-10 ${
-            (answer === chosenAnswer && timer > 0 && !answerPicked) ||
-            ((timer <= 0 || answerPicked) && chosenAnswer === answer)
+          className={`flex justify-center gap-4 py-8 mt-4 ${
+            (answer === chosenAnswer && timer > 0 && !answerPicked)
               ? blue
-              : answer ===
-                  questionsFromDatabase[questionNumber].correctAnswer ||
-                (timer > 0 && !answerPicked)
-              ? green
-              : red
+              : answer === chosenAnswer && (timer <= 0 || answerPicked) && answer !== questionsFromDatabase[questionNumber].correctAnswer
+               ? red :
+               ((timer <= 0 || answerPicked) && answer === questionsFromDatabase[questionNumber].correctAnswer ? green : transparent)
           } rounded-md
         font-medium text-white uppercase
         focus:outline-none hover:ring-2 ring-offset-2 ring-blue-600  focus:outline-none`}
@@ -194,9 +194,6 @@ export default function Quizpage() {
     });
   });
 
-  // weird bug when check answer is pressed multiple times on the next question the timer falls too quickly...
-  // thought I could combat this by passing a useless function to Onclick if the user has already checked thier answer
-  // checkAnswer only runs on first button click but issue remains ...curious
   const Check = React.memo(() => {
     return (
       <button
@@ -221,23 +218,32 @@ export default function Quizpage() {
   // if the questions are there let's do the thing ... or naw
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-[#063970] to-blue-200">
-      <span className="text-2xl text-white inline">
+    <div>
+    <div className="flex justify-between">
+      <span className="text-2xl text-white text-left">
         Difficulty: {questionsFromDatabase[questionNumber]?.difficulty}
-      </span>
-      <span className="text-2xl text-white inline">
-        Question: {questionNumber + 1} / {questionsFromDatabase.length}
       </span>
       <span className="text-2xl text-white text-right inline">
         Points: {points}
       </span>
-      <span className="text-2xl text-white text-right inline">
-        Time: {!answerPicked ? timer : 0}
+    </div>
+    <div className="flex justify-between">
+      <span className="text-2xl text-white text-left">
+      Question: {questionNumber + 1}
       </span>
-      <div className="text-2xl text-white text-center">
+      <span className="text-2xl text-white text-right inline">
+      Time: {!answerPicked ? timer : 0}
+      </span>
+    </div>
+    <div className="grid h-screen place-items-center">
+    <div className="my-6 text-center w-4/6">
+      <div className="text-2xl text-white">
         {questionsFromDatabase[questionNumber]?.question}
       </div>
+      <div id="answer-buttons" className="grid gap-4 grid-cols-2 my-6">
       {<Answers />}
+      </div>
+      <div className ="grid gap-4 grid-cols-2 my-7">
       {<Check />}
       <button
         className={`w-full py-3 mt-10 ${
@@ -249,6 +255,9 @@ export default function Quizpage() {
       >
         next
       </button>
+      </div>
+    </div>
+    </div>
     </div>
   );
 }

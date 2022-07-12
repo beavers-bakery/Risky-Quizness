@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Result from "./components/Result";
 import { useAuth } from "./contexts/AuthContext";
 import Leaderboard from "./components/Leaderboard";
+import Testpage from "./components/tempComponents/TestPage";
 
 function App() {
   const { user } = useAuth();
@@ -23,6 +24,7 @@ function App() {
           element={user ? <Leaderboard /> : <Welcome />}
         />
         <Route path="/result" element={user ? <Result /> : <Welcome />} />
+        <Route path="/testpage" element={user ? <Testpage /> : <Welcome />} />
       </Routes>
     </Router>
   );

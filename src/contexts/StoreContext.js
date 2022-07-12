@@ -9,7 +9,26 @@ import {
   where,
   getDocs,
   Timestamp,
+  orderBy,
 } from "firebase/firestore";
+import { async } from "@firebase/util";
+
+export const hasPlayedToday = async function (userId) {
+  const scoresArr = await getUserScores(userId);
+  let hasPlayed = false;
+  let today = new Date(Date.now());
+  today = new Date(today.toDateString());
+  scoresArr.forEach((score) => {
+    let scoreDate = new Date(score.createdAt.seconds * 1000);
+    if (scoreDate.toDateString() === today.toDateString()) {
+      hasPlayed = true;
+    }
+  });
+  console.log("date.now() :", new Date(Date.now()));
+  console.log("timestampe via date.now() :", new Timestamp(Date.now() / 1000));
+  // console.log(new Date(serverTimestamp().seconds * 1000));
+  return hasPlayed;
+};
 
 export const addUserScore = async function (userId, score, category) {
   const scoreDoc = {
@@ -48,18 +67,20 @@ export const getUserScores = async function (userId) {
     docObj.scoreId = doc.id;
     scoresArr.push(docObj);
   });
-  console.log(scoresArr);
   return scoresArr;
 };
 
 export const getTodaysQuestions = async function () {
-  // get todays date in proper format
-  const today = new Date(Date.now());
-  let DatetoCheck = new Date(today.toDateString());
+  // get todays date in proper format in "Sat Jul 09 2022"
+  const today = new Date(Date.now()).toDateString();
 
   // set up query parameters to get
   const questionsRef = collection(db, "questions");
-  const q = query(questionsRef, where("dateUsed", "==", DatetoCheck));
+  const q = query(
+    questionsRef,
+    // orderBy("difficulty"),
+    where("dateUsed", "==", today)
+  );
   const querySnapshot = await getDocs(q);
 
   // initialize and populate output array of questions
@@ -3201,21 +3222,21 @@ for (let i = 0; i < easyQuestions.length; i++) {
   let x = Math.floor(i / 2);
   const q = easyQuestions[i];
   const updatedDate = new Date(startDate.getTime() + oneDayDiff * x);
-  q.dateUsed = Timestamp.fromDate(updatedDate);
+  q.dateUsed = updatedDate.toDateString();
 }
 for (let i = 0; i < mediumQuestions.length; i++) {
   // 4 medium ques. per day
   let x = Math.floor(i / 4);
   const q = mediumQuestions[i];
   const updatedDate = new Date(startDate.getTime() + oneDayDiff * x);
-  q.dateUsed = Timestamp.fromDate(updatedDate);
+  q.dateUsed = updatedDate.toDateString();
 }
 for (let i = 0; i < hardQuestions.length; i++) {
   // 6 medium ques. per day
   let x = Math.floor(i / 4);
   const q = hardQuestions[i];
   const updatedDate = new Date(startDate.getTime() + oneDayDiff * x);
-  q.dateUsed = Timestamp.fromDate(updatedDate);
+  q.dateUsed = updatedDate.toDateString();
 }
 // join arrays
 const joinedQuestionsWithDates = [

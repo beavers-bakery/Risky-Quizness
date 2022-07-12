@@ -26,6 +26,7 @@ export default function Quizpage() {
   let [chosenAnswer, setChosenAnswer] = useState("");
   let [answerPicked, setAnswerPicked] = useState(false);
   const [points, setPoints] = useState(0);
+  const [isRight, setIsRight] = useState(false)
   const Ref = useRef(null);
   const navigate = useNavigate();
   // color constants for easy on-the-fly tailwind changes when answer is choosen/incorrect ect
@@ -77,12 +78,8 @@ export default function Quizpage() {
       setChosenAnswer("");
       clearTimer(getDeadTime());
       setRanOnce(false);
-      console.log(answerPicked, "answer picked pre resetquestion");
       setAnswerPicked(false);
-      console.log(answerPicked, "answer picked post resetquestion");
-      // setTime(15)
-      // time = 15
-      // startTimer()
+      setIsRight(false);
     }
   };
 
@@ -160,6 +157,7 @@ export default function Quizpage() {
       if (questionsFromDatabase[questionNumber].difficulty === "hard") {
         setPoints(points + 30);
       }
+      setIsRight(true);
     }
     setAnswerPicked(true);
     setTimer(0);
@@ -235,6 +233,41 @@ export default function Quizpage() {
       Time: {!answerPicked ? timer : 0}
       </span>
     </div>
+
+   { isRight && (timer <= 0 || answerPicked) ?
+    <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+    <br className="block md:hidden" />
+    <span
+      className="inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
+    >
+      Nice Work!
+    </span>
+    <span
+      className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"
+    ></span>
+  </h1>
+  :
+
+  ( !isRight && (timer <= 0 || answerPicked) ?
+
+  <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+  <br className="block md:hidden" />
+  <span
+    className="inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
+  >
+    Try Again!
+  </span>
+  <span
+    className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"
+  ></span>
+</h1>
+
+  :
+  <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">Good Luck!</h1>
+  )
+
+}
+
     <div className="grid h-screen place-items-center">
     <div className="my-6 text-center w-4/6">
       <div className="text-2xl text-white">

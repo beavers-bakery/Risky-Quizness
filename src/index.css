@@ -38,10 +38,10 @@ html {
 }
 
 
-@font-face {
+/* @font-face {
   font-family: neon;
   src: url(../public/NEON.TTF);
-}
+} */
 .neon-wrapper {
   box-shadow:
   0 0 0.1vw  0.4vw #fff7f7,

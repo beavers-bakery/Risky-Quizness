@@ -3,6 +3,8 @@ import { getTodaysQuestions } from "../contexts/StoreContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Quizpage() {
+  // let background = document.getElementById("background")
+  // background.style.backgroundImage = "url('./Quizpage.jpeg')"
   const [questionNumber, setQuestionNumber] = useState(0);
   // used let for time useState for more flexibility with time checks
   // as well as rendering countdown
@@ -15,6 +17,7 @@ export default function Quizpage() {
   let [chosenAnswer, setChosenAnswer] = useState("");
   let [answerPicked, setAnswerPicked] = useState(false);
   const [points, setPoints] = useState(0);
+  const [isRight, setIsRight] = useState(false)
   const Ref = useRef(null);
   const navigate = useNavigate();
   // color constants for easy on-the-fly tailwind changes when answer is choosen/incorrect ect
@@ -22,6 +25,7 @@ export default function Quizpage() {
   const green = "bg-green-500";
   const blue = "bg-blue-400";
   const grey = "bg-gray-400";
+  const transparent = "--tw-bg-opacity: 1"
 
   // limit only pulls the first 10 questions instead of all of them
   // should be helpful to change questions every day
@@ -79,12 +83,8 @@ export default function Quizpage() {
       setChosenAnswer("");
       clearTimer(getDeadTime());
       setRanOnce(false);
-      console.log(answerPicked, "answer picked pre resetquestion");
       setAnswerPicked(false);
-      console.log(answerPicked, "answer picked post resetquestion");
-      // setTime(15)
-      // time = 15
-      // startTimer()
+      setIsRight(false);
     }
   };
 
@@ -162,6 +162,7 @@ export default function Quizpage() {
       if (questionsFromDatabase[questionNumber].difficulty === "hard") {
         setPoints(points + 30);
       }
+      setIsRight(true);
     }
     setAnswerPicked(true);
     setTimer(0);
@@ -174,15 +175,12 @@ export default function Quizpage() {
     return shuffledArray.map((answer, i) => {
       return (
         <button
-          className={`w-full py-3 mt-10 ${
-            (answer === chosenAnswer && timer > 0 && !answerPicked) ||
-            ((timer <= 0 || answerPicked) && chosenAnswer === answer)
+          className={`flex justify-center gap-4 py-8 mt-4${
+            (answer === chosenAnswer && timer > 0 && !answerPicked)
               ? blue
-              : answer ===
-                  questionsFromDatabase[questionNumber].correctAnswer ||
-                (timer > 0 && !answerPicked)
-              ? green
-              : red
+              : answer === chosenAnswer && (timer <= 0 || answerPicked) && answer !== questionsFromDatabase[questionNumber].correctAnswer
+               ? red :
+               ((timer <= 0 || answerPicked) && answer === questionsFromDatabase[questionNumber].correctAnswer ? green : transparent)
           } rounded-md
         font-medium text-white uppercase
         focus:outline-none hover:ring-2 ring-offset-2 ring-blue-600  focus:outline-none`}
@@ -199,9 +197,6 @@ export default function Quizpage() {
     });
   });
 
-  // weird bug when check answer is pressed multiple times on the next question the timer falls too quickly...
-  // thought I could combat this by passing a useless function to Onclick if the user has already checked thier answer
-  // checkAnswer only runs on first button click but issue remains ...curious
   const Check = React.memo(() => {
     return (
       <button
@@ -214,7 +209,6 @@ export default function Quizpage() {
                   questionsFromDatabase[questionNumber].correctAnswer
                 )
             : () => {
-                console.log("CHECK ANSWER DOESNT WORK... good");
               }
         }
       >
@@ -226,23 +220,66 @@ export default function Quizpage() {
   // if the questions are there let's do the thing ... or naw
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-[#063970] to-blue-200">
-      <span className="text-2xl text-white inline">
+    <div>
+    <div className="flex justify-between">
+      <span className="text-2xl text-white text-left">
         Difficulty: {questionsFromDatabase[questionNumber]?.difficulty}
-      </span>
-      <span className="text-2xl text-white inline">
-        Question: {questionNumber + 1} / {questionsFromDatabase.length}
       </span>
       <span className="text-2xl text-white text-right inline">
         Points: {points}
       </span>
-      <span className="text-2xl text-white text-right inline">
-        Time: {!answerPicked ? timer : 0}
+    </div>
+    <div className="flex justify-between">
+      <span className="text-2xl text-white text-left">
+      Question: {questionNumber + 1}
       </span>
-      <div className="text-2xl text-white text-center">
+      <span className="text-2xl text-white text-right inline">
+      Time: {!answerPicked ? timer : 0}
+      </span>
+    </div>
+   { isRight && (timer <= 0 || answerPicked) ?
+    <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+    <br className="block md:hidden" />
+    <span
+      className="inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
+    >
+      Nice Work!
+    </span>
+    <span
+      className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"
+    ></span>
+  </h1>
+  :
+
+  ( !isRight && (timer <= 0 || answerPicked) ?
+
+  <div className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+  <br className="block md:hidden" />
+  <h1
+    className="neon-text inline-flex h-16 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
+  >
+    Try Again!
+  </h1>
+  <span
+    className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"
+  ></span>
+</div>
+
+  :
+  <h1 className="neon-text mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">Good Luck!</h1>
+  )
+
+}
+
+    <div className="grid h-screen place-items-center neon-wrapper">
+    <div className="my-6 text-center w-4/6">
+      <div className="text-2xl text-white">
         {questionsFromDatabase[questionNumber]?.question}
       </div>
+      <div id="answer-buttons" className="grid gap-4 grid-cols-2 my-6">
       {<Answers />}
+      </div>
+      <div className ="grid gap-4 grid-cols-2 my-7">
       {<Check />}
       <button
         className={`w-full py-3 mt-10 ${
@@ -254,6 +291,9 @@ export default function Quizpage() {
       >
         next
       </button>
+      </div>
+    </div>
+    </div>
     </div>
   );
 }

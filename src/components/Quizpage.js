@@ -271,7 +271,7 @@ export default function Quizpage() {
 
 }
 
-    <div className="grid h-screen place-items-center neon-wrapper">
+    <div className="grid place-items-center neon-wrapper">
     <div className="my-6 text-center w-4/6">
       <div className="text-2xl text-white">
         {questionsFromDatabase[questionNumber]?.question}

@@ -8,10 +8,10 @@ import {
   query,
   where,
   getDocs,
-  Timestamp,
   orderBy,
+  limit,
+  startAfter,
 } from "firebase/firestore";
-import { async } from "@firebase/util";
 
 export const hasPlayedToday = async function (userId) {
   const scoresArr = await getUserScores(userId);
@@ -39,20 +39,47 @@ export const addUserScore = async function (userId, score, category) {
   await addDoc(collection(db, "scores"), scoreDoc);
 };
 
-export const getAllScores = async () => {
-  const scoresCol = collection(db, "scores");
-  const usersCol = collection(db, "users");
-  const scoresQuery = query(scoresCol);
-  const usersQuery = query(usersCol);
-  const scoresQuerySnapshot = await getDocs(scoresQuery);
-  const usersQuerySnapshot = await getDocs(usersQuery);
+const scoresCol = collection(db, "scores");
+const usersCol = collection(db, "users");
 
+const sendScores = (scoresQuerySnapshot, usersQuerySnapshot) => {
   return scoresQuerySnapshot.docs.map((score) => {
     const user = usersQuerySnapshot.docs.find(
       (user) => user.id === score.data().userId
     );
     return { id: score.id, ...score.data(), username: user.data().username };
   });
+};
+
+export const getAllScores = async (setLastDoc) => {
+  const scoresQuery = query(scoresCol, orderBy("score", "desc"), limit(10));
+  const usersQuery = query(usersCol);
+  const scoresQuerySnapshot = await getDocs(scoresQuery);
+  const usersQuerySnapshot = await getDocs(usersQuery);
+
+  const lastVisible =
+    scoresQuerySnapshot.docs[scoresQuerySnapshot.docs.length - 1];
+  setLastDoc(lastVisible);
+
+  return sendScores(scoresQuerySnapshot, usersQuerySnapshot);
+};
+
+export const fetchMore = async (setLastDoc, lastDoc) => {
+  const scoresQuery = query(
+    scoresCol,
+    orderBy("score", "desc"),
+    startAfter(lastDoc),
+    limit(10)
+  );
+  const usersQuery = query(usersCol);
+  const scoresQuerySnapshot = await getDocs(scoresQuery);
+  const usersQuerySnapshot = await getDocs(usersQuery);
+
+  const lastVisible =
+    scoresQuerySnapshot.docs[scoresQuerySnapshot.docs.length - 1];
+  setLastDoc(lastVisible);
+
+  return sendScores(scoresQuerySnapshot, usersQuerySnapshot);
 };
 
 export const getUserScores = async function (userId) {

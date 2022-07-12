@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { getAllScores } from "../contexts/StoreContext";
+import { fetchMore, getAllScores } from "../contexts/StoreContext";
 import LeaderboardRow from "./LeaderboardRow";
 
 const Leaderboard = () => {
   const [scores, setScores] = useState([]);
+  const [lastDoc, setLastDoc] = useState();
   const [period, setPeriod] = useState("0");
   const [loading, setLoading] = useState(false);
+  const [loadMoreLoading, setLoadMoreLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     const getData = async () => {
-      const scores = await getAllScores();
+      setLoading(true);
+      const scores = await getAllScores(setLastDoc);
       setScores(scores);
       setLoading(false);
     };
@@ -31,11 +33,19 @@ const Leaderboard = () => {
       return previous <= userDate && today >= userDate;
     });
 
-    return filter.sort((a, b) => b.score - a.score);
+    return filter;
   };
 
   const handleClick = (e) => {
     setPeriod(e.target.dataset.id);
+  };
+
+  const handleLoadMore = async () => {
+    setLoadMoreLoading(true);
+    const moreScores = await fetchMore(setLastDoc, lastDoc);
+    setLoadMoreLoading(false);
+
+    setScores([...scores, ...moreScores]);
   };
 
   return (
@@ -109,6 +119,18 @@ const Leaderboard = () => {
               </table>
             </>
           )}
+          <div>
+            {loadMoreLoading ? (
+              <h2 className="text-white text-lg">Loading More...</h2>
+            ) : (
+              <button
+                onClick={handleLoadMore}
+                className="border-2 rounded-lg py-1 px-4 text-white bg-purple-400"
+              >
+                Load More
+              </button>
+            )}
+          </div>
         </>
       )}
     </div>

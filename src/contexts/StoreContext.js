@@ -17,16 +17,14 @@ export const hasPlayedToday = async function (userId) {
   const scoresArr = await getUserScores(userId);
   let hasPlayed = false;
   let today = new Date(Date.now());
-  today = new Date(today.toDateString());
+  today = new Date(today.toDateString()); // only get the date, and remove the Time components
+
   scoresArr.forEach((score) => {
     let scoreDate = new Date(score.createdAt.seconds * 1000);
     if (scoreDate.toDateString() === today.toDateString()) {
       hasPlayed = true;
     }
   });
-  console.log("date.now() :", new Date(Date.now()));
-  console.log("timestampe via date.now() :", new Timestamp(Date.now() / 1000));
-  // console.log(new Date(serverTimestamp().seconds * 1000));
   return hasPlayed;
 };
 
@@ -76,11 +74,7 @@ export const getTodaysQuestions = async function () {
 
   // set up query parameters to get
   const questionsRef = collection(db, "questions");
-  const q = query(
-    questionsRef,
-    // orderBy("difficulty"),
-    where("dateUsed", "==", today)
-  );
+  const q = query(questionsRef, where("dateUsed", "==", today));
   const querySnapshot = await getDocs(q);
 
   // initialize and populate output array of questions
@@ -90,7 +84,13 @@ export const getTodaysQuestions = async function () {
     docObj.questionId = doc.id;
     questionsArr.push(docObj);
   });
-  return questionsArr;
+
+  //sort questions arr
+  let easyQ = questionsArr.filter((q) => q.difficulty === "easy");
+  let mediumQ = questionsArr.filter((q) => q.difficulty === "medium");
+  let hardQ = questionsArr.filter((q) => q.difficulty === "hard");
+
+  return [...easyQ, ...mediumQ, ...hardQ];
 };
 
 // initial seeding function below

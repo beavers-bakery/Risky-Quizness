@@ -2,7 +2,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
   hasPlayedToday,
-  getUserScores,
   getTodaysQuestions,
   seedAllQuestions,
 } from "../../contexts/StoreContext";

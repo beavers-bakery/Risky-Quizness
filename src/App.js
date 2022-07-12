@@ -24,7 +24,7 @@ function App() {
           element={user ? <Leaderboard /> : <Welcome />}
         />
         <Route path="/result" element={user ? <Result /> : <Welcome />} />
-        <Route path="/testpage" element={user ? <Testpage /> : <Welcome />} />
+        <Route path="/testpage" element={<Testpage />} />
       </Routes>
     </Router>
   );

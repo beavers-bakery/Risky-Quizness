@@ -94,6 +94,7 @@ export default function Quizpage() {
     return () => {
       // stopTimer()
     };
+    // eslint-disable-next-line
   }, []);
 
   const getTimeRemaining = (e) => {

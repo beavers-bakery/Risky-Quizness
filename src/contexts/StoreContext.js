@@ -8,10 +8,7 @@ import {
   query,
   where,
   getDocs,
-  Timestamp,
-  orderBy,
 } from "firebase/firestore";
-import { async } from "@firebase/util";
 
 export const hasPlayedToday = async function (userId) {
   const scoresArr = await getUserScores(userId);

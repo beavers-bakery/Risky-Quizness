@@ -20,6 +20,7 @@ const Result = () => {
 
   useEffect(() => {
     addUserScore(user?.uid, points, "General");
+    // eslint-disable-next-line
   }, []);
 
   return (

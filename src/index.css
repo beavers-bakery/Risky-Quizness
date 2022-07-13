@@ -2,13 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
+/* html {
   background: url(../public/back.jpeg) no-repeat center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: 100% 100%;
-}
+} */
+
+
+
 
 .will-change-transform {
   will-change: transform;
@@ -55,7 +58,7 @@ html {
 }
 .neon-text {
   font-family:neon;
-  font-size: 3rem;
+  /* font-size: 3rem; */
   color: #ffd8d8;
   padding: 0 3.5rem 0 3.5rem;
   text-shadow:

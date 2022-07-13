@@ -1,3 +1,5 @@
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -27,12 +29,12 @@ const PasswordReset = ({ setShowResetModal, showResetModal }) => {
       <div className="p-4">
         <div className="flex justify-between">
           <h2 className="text-2xl font-bold text-center">Reset Password</h2>
-          <p
+
+          <FontAwesomeIcon
             className="cursor-pointer"
             onClick={() => setShowResetModal(!showResetModal)}
-          >
-            X
-          </p>
+            icon={faXmark}
+          />
         </div>
         <hr className="border mt-4" />
         {error && (

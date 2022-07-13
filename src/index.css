@@ -54,9 +54,7 @@
 }
 .neon-text {
   font-family:neon;
-  /* font-size: 3rem; */
   color: #ffd8d8;
-  padding: 0 3.5rem 0 3.5rem;
   text-shadow: 0.1vw 0vw 0.25vw #ffd8d8, 0.2vw 0vw 0.25vw #ffd8d8,
     0.4vw 0vw 0.25vw #ffd8d8, 0.1vw 0vw 0vw #578df2, 0.2vw 0vw 0vw #578df2,
     0.4vw 0vw 0vw #b457f2, 0.1vw 0vw 0.1vw #578df2, 0.2vw 0vw 0.1vw #b457f2,

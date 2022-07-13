@@ -227,7 +227,7 @@ export default function Quizpage() {
       {isRight && (timer <= 0 || answerPicked) ? (
         <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
           <br className="block md:hidden" />
-          <span className="inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
+          <span className="neon-text inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
             Nice Work!
           </span>
           <span className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"></span>
@@ -235,7 +235,7 @@ export default function Quizpage() {
       ) : !isRight && (timer <= 0 || answerPicked) ? (
         <div className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
           <br className="block md:hidden" />
-          <h1 className="neon-text inline-flex h-16 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
+          <h1 className="neon-text inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
             Try Again!
           </h1>
           <span className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"></span>

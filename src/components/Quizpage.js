@@ -1,15 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  collection,
-  getDocs,
-  query,
-  limit,
-  getFirestore,
-} from "firebase/firestore";
-import { db } from "../firebase";
 import { getTodaysQuestions } from "../contexts/StoreContext";
 import { useNavigate } from "react-router-dom";
-import Result from "./Result";
+
 
 export default function Quizpage() {
   // let background = document.getElementById("background")
@@ -167,7 +159,7 @@ export default function Quizpage() {
         <button
           className={`flex justify-center gap-4 py-8 mt-4 rounded-md
         font-medium text-white uppercase
-        focus:outline-none hover:ring-2 ring-offset-2 ${
+        focus:outline-none ring-2 ring-offset-2 ${
           (answer === chosenAnswer && timer > 0 && !answerPicked)
             ? blue
             : answer === chosenAnswer && (timer <= 0 || answerPicked) && answer !== questionsFromDatabase[questionNumber].correctAnswer
@@ -242,10 +234,10 @@ export default function Quizpage() {
 
   ( !isRight && (timer <= 0 || answerPicked) ?
 
-  <div className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+  <div className="mb-1 font-mono text-6xl text-center text-gray-100 md:text-6xl">
   <br className="block md:hidden" />
   <h1
-    className="neon-text inline-flex h-16 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
+    className="neon-text inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
   >
     Try Again!
   </h1>

@@ -34,7 +34,7 @@ const UserProfile = () => {
         </div>
       )}
       <div
-        className={`flex justify-center w-screen h-full relative z-40 py-20 ${
+        className={`flex justify-center w-screen h-screen relative z-40 py-20 ${
           showEditModal ? "opacity-20" : ""
         }`}
       >

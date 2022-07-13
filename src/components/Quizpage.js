@@ -1,15 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  collection,
-  getDocs,
-  query,
-  limit,
-  getFirestore,
-} from "firebase/firestore";
-import { db } from "../firebase";
 import { getTodaysQuestions } from "../contexts/StoreContext";
 import { useNavigate } from "react-router-dom";
-import Result from "./Result";
+
 
 export default function Quizpage() {
   // let background = document.getElementById("background")
@@ -178,7 +170,13 @@ export default function Quizpage() {
               : transparent
           } rounded-md
         font-medium text-white uppercase
-        focus:outline-none hover:ring-2 ring-offset-2 ring-blue-600`}
+        focus:outline-none ring-2 ring-offset-2 ${
+          (answer === chosenAnswer && timer > 0 && !answerPicked)
+            ? blue
+            : answer === chosenAnswer && (timer <= 0 || answerPicked) && answer !== questionsFromDatabase[questionNumber].correctAnswer
+             ? red :
+             ((timer <= 0 || answerPicked) && answer === questionsFromDatabase[questionNumber].correctAnswer ? green : transparent)
+        } ring-blue-600`}
           key={i}
           onClick={
             timer > 0 && !answerPicked

@@ -41,14 +41,13 @@ const UserProfile = () => {
         <div className="mt-8 w-[800px]">
           <div
             id="user_info"
-            className="border drop-shadow-md mx-8 mb-8 px-6 py-4 rounded-md"
+            className="border-2 drop-shadow-lg mx-8 mb-8 px-6 py-4 rounded-md bg-white"
           >
             <h2 className="font-bold text-xl mb-4">User Information</h2>
-            <h2>Name: </h2>
             <h2>Email: {userInfo.email}</h2>
             <h2>Display Name: {userInfo.displayName}</h2>
             <button
-              className="border-2 rounded-md px-8 py-2 bg-green-600 text-white mt-2"
+              className="rounded-lg px-8 py-2 drop-shadow-lg bg-purple-600 text-white mt-2"
               onClick={handleClick}
             >
               Edit Information
@@ -56,7 +55,7 @@ const UserProfile = () => {
           </div>
           <div
             id="user_scores"
-            className="border drop-shadow-md m-8 px-6 py-4 rounded-md"
+            className=" border-2 drop-shadow-lg m-8 px-6 py-4 rounded-lg bg-white"
           >
             <h2 className="font-bold text-xl mb-4">Recent Scores</h2>
             <div className="flex justify-between mb-2">

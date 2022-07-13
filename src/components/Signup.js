@@ -1,3 +1,5 @@
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -19,7 +21,11 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
     e.preventDefault();
     try {
       setError("");
-      await signup(emailRef.current.value, passwordRef.current.value, usernameRef.current.value);
+      await signup(
+        emailRef.current.value,
+        passwordRef.current.value,
+        usernameRef.current.value
+      );
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -32,12 +38,12 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
       <div className="p-4">
         <div className="flex justify-between">
           <h2 className="text-2xl font-bold text-center">Sign Up</h2>
-          <p
-            onClick={() => setShowSignupModal(!showSignupModal)}
+
+          <FontAwesomeIcon
             className="cursor-pointer"
-          >
-            X
-          </p>
+            onClick={() => setShowSignupModal(!showSignupModal)}
+            icon={faXmark}
+          />
         </div>
         <hr className="border mt-4" />
         {error && (

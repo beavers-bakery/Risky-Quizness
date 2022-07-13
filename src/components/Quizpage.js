@@ -222,7 +222,7 @@ export default function Quizpage() {
     <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
     <br className="block md:hidden" />
     <span
-      className="inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
+      className=" neon-text inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
     >
       Nice Work!
     </span>

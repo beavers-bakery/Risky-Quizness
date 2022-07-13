@@ -17,7 +17,7 @@ export default function Quizpage() {
   let [chosenAnswer, setChosenAnswer] = useState("");
   let [answerPicked, setAnswerPicked] = useState(false);
   const [points, setPoints] = useState(0);
-  const [isRight, setIsRight] = useState(false)
+  const [isRight, setIsRight] = useState(false);
   const Ref = useRef(null);
   const navigate = useNavigate();
   // color constants for easy on-the-fly tailwind changes when answer is choosen/incorrect ect
@@ -25,27 +25,13 @@ export default function Quizpage() {
   const green = "bg-green-500";
   const blue = "bg-blue-400";
   const grey = "bg-gray-400";
-  const transparent = "--tw-bg-opacity: 1"
+  const transparent = "--tw-bg-opacity: 1";
 
   // limit only pulls the first 10 questions instead of all of them
   // should be helpful to change questions every day
   async function queryForQuestions() {
     const questions = await getTodaysQuestions();
-    setQuestionsFromDatabase(
-      questions.sort((a, b) => {
-        if (a.difficulty === "easy" && b.difficulty !== "easy") {
-          return -1;
-        } else if (a.difficulty !== "easy" && b.difficulty === "easy") {
-          return 1;
-        } else if (a.difficulty === "medium" && b.difficulty === "hard") {
-          return -1;
-        } else if (a.difficulty === "hard" && b.difficulty === "medium") {
-          return 1;
-        } else {
-          return 0;
-        }
-      })
-    );
+    setQuestionsFromDatabase(questions);
   }
 
   // after every question re-shuffle questions array
@@ -148,12 +134,6 @@ export default function Quizpage() {
 
   let checkAnswer = (chosen, answer) => {
     if (chosen === answer && timer > 0) {
-      console.log(
-        "...Not bad",
-        "questionsFromDatabase[questionNumber].difficulty: ",
-        questionsFromDatabase[questionNumber].difficulty,
-        chosen
-      );
       if (questionsFromDatabase[questionNumber].difficulty === "easy") {
         setPoints(points + 10);
       }
@@ -176,19 +156,26 @@ export default function Quizpage() {
     return shuffledArray.map((answer, i) => {
       return (
         <button
-          className={`flex justify-center gap-4 py-8 mt-4${
-            (answer === chosenAnswer && timer > 0 && !answerPicked)
-              ? blue
-              : answer === chosenAnswer && (timer <= 0 || answerPicked) && answer !== questionsFromDatabase[questionNumber].correctAnswer
-               ? red :
-               ((timer <= 0 || answerPicked) && answer === questionsFromDatabase[questionNumber].correctAnswer ? green : transparent)
-          } rounded-md
+          className={`flex justify-center gap-4 py-8 mt-4 rounded-md
         font-medium text-white uppercase
-        focus:outline-none hover:ring-2 ring-offset-2 ring-blue-600  focus:outline-none`}
+        focus:outline-none ring-2 ring-offset-2 ${
+          answer === chosenAnswer && timer > 0 && !answerPicked
+            ? blue
+            : answer === chosenAnswer &&
+              (timer <= 0 || answerPicked) &&
+              answer !== questionsFromDatabase[questionNumber].correctAnswer
+            ? red
+            : (timer <= 0 || answerPicked) &&
+              answer === questionsFromDatabase[questionNumber].correctAnswer
+            ? green
+            : transparent
+        } ring-blue-600  focus:outline-none`}
           key={i}
           onClick={
             timer > 0 && !answerPicked
-              ? () => setChosenAnswer(answer)
+              ? () => {
+                  setChosenAnswer(answer);
+                }
               : () => {}
           }
         >
@@ -209,8 +196,7 @@ export default function Quizpage() {
                   chosenAnswer,
                   questionsFromDatabase[questionNumber].correctAnswer
                 )
-            : () => {
-              }
+            : () => {}
         }
       >
         Check answer
@@ -222,79 +208,67 @@ export default function Quizpage() {
 
   return (
     <div>
-    <div className="flex justify-between">
-      <span className="text-2xl text-white text-left">
-        Difficulty: {questionsFromDatabase[questionNumber]?.difficulty}
-      </span>
-      <span className="text-2xl text-white text-right inline">
-        Points: {points}
-      </span>
-    </div>
-    <div className="flex justify-between">
-      <span className="text-2xl text-white text-left">
-      Question: {questionNumber + 1}
-      </span>
-      <span className="text-2xl text-white text-right inline">
-      Time: {!answerPicked ? timer : 0}
-      </span>
-    </div>
-   { isRight && (timer <= 0 || answerPicked) ?
-    <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
-    <br className="block md:hidden" />
-    <span
-      className="inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
-    >
-      Nice Work!
-    </span>
-    <span
-      className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"
-    ></span>
-  </h1>
-  :
-
-  ( !isRight && (timer <= 0 || answerPicked) ?
-
-  <div className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
-  <br className="block md:hidden" />
-  <h1
-    className="neon-text inline-flex h-16 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform"
-  >
-    Try Again!
-  </h1>
-  <span
-    className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"
-  ></span>
-</div>
-
-  :
-  <h1 className="neon-text mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">Good Luck!</h1>
-  )
-
-}
-
-    <div className="grid h-screen place-items-center neon-wrapper">
-    <div className="my-6 text-center w-4/6">
-      <div className="text-2xl text-white">
-        {questionsFromDatabase[questionNumber]?.question}
+      <div className="flex justify-between">
+        <span className="text-2xl text-white text-left">
+          Difficulty: {questionsFromDatabase[questionNumber]?.difficulty}
+        </span>
+        <span className="text-2xl text-white text-right inline">
+          Points: {points}
+        </span>
       </div>
-      <div id="answer-buttons" className="grid gap-4 grid-cols-2 my-6">
-      {<Answers />}
+      <div className="flex justify-between">
+        <span className="text-2xl text-white text-left">
+          Question: {questionNumber + 1}
+        </span>
+        <span className="text-2xl text-white text-right inline">
+          Time: {!answerPicked ? timer : 0}
+        </span>
       </div>
-      <div className ="grid gap-4 grid-cols-2 my-7">
-      {<Check />}
-      <button
-        className={`w-full py-3 mt-10 ${
-          timer > 0 && !answerPicked ? grey : blue
-        } p-3 pl-4 pr-4 rounded-lg font-bold transition duration-500 ease-in-out hover:ring-2 ring-offset-2 ring-gray-600 ${
-          timer > 0 && !answerPicked ? "cursor-not-allowed" : ""
-        }`}
-        onClick={timer <= 0 || answerPicked ? resetQuestion : () => {}}
-      >
-        next
-      </button>
+      {isRight && (timer <= 0 || answerPicked) ? (
+        <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+          <br className="block md:hidden" />
+          <span className="inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
+            Nice Work!
+          </span>
+          <span className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"></span>
+        </h1>
+      ) : !isRight && (timer <= 0 || answerPicked) ? (
+        <div className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+          <br className="block md:hidden" />
+          <h1 className="neon-text inline-flex h-16 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
+            Try Again!
+          </h1>
+          <span className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"></span>
+        </div>
+      ) : (
+        <h1 className="neon-text mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+          Good Luck!
+        </h1>
+      )}
+
+      <div className="grid place-items-center neon-wrapper">
+        <div className="my-6 text-center w-4/6">
+          <div className="text-2xl text-white">
+            {questionsFromDatabase[questionNumber]?.question}
+          </div>
+          <div id="answer-buttons" className="grid gap-4 grid-cols-2 my-6">
+            {<Answers />}
+          </div>
+          <div className="grid gap-4 grid-cols-2 my-7">
+            {<Check />}
+            <button
+              className={`w-full py-3 mt-10 ${
+                timer > 0 && !answerPicked ? grey : blue
+              } p-3 pl-4 pr-4 rounded-lg font-bold transition duration-500 ease-in-out hover:ring-2 ring-offset-2 ring-gray-600 ${
+                timer > 0 && !answerPicked ? "cursor-not-allowed" : ""
+              }`}
+              onClick={timer <= 0 || answerPicked ? resetQuestion : () => {}}
+            >
+              next
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-    </div>
     </div>
   );
 }

@@ -25,7 +25,9 @@ const Home = () => {
 
   return (
     <>
-      <div className='relative flex h-screen w-screen flex-col bg-[#63B4D1] md:items-center md:justify-center md:bg-[#00CC99]'>
+      <div
+      className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900">
+      {/* className='relative flex h-screen w-screen flex-col bg-[#63B4D1] md:items-center md:justify-center md:bg-[#00CC99]'> */}
         <div>
           <strong>Player: {user?.displayName} </strong>
           <hr />

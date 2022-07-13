@@ -8,9 +8,9 @@ const Welcome = () => {
   const [showResetModal, setShowResetModal] = useState(false);
 
   return (
-    <div className={`h-screen`}>
+    <div className={`h-screen relative z-40`}>
       {showSignupModal ? (
-        <div className="flex items-center justify-center absolute z-50 w-full h-full">
+        <div className="flex items-center justify-center px-5 relative z-50 w-full h-full">
           <Signup
             setShowSignupModal={setShowSignupModal}
             showSignupModal={showSignupModal}

@@ -1,0 +1,17 @@
+#popup {
+  font-family: 'Courier New', Courier, monospace;
+  position: absolute;
+  display: grid;
+  top: 40%;
+  position: relative;
+  z-index: 40;
+}
+#my-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+

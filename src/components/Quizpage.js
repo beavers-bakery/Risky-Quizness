@@ -207,8 +207,8 @@ export default function Quizpage() {
   // if the questions are there let's do the thing ... or naw
 
   return (
-    <div>
-      <div className="flex justify-between">
+    <div className="relative z-40 h-full py-20">
+      <div className="flex justify-between ">
         <span className="text-2xl text-white text-left">
           Difficulty: {questionsFromDatabase[questionNumber]?.difficulty}
         </span>

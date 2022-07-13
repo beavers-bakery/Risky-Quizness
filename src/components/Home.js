@@ -25,16 +25,15 @@ const Home = () => {
 
   return (
     <>
-      <div className="relative flex h-screen w-screen flex-col bg-[#63B4D1] md:items-center md:justify-center md:bg-[#00CC99]">
+      <div className="relative h-full px-5 py-20 z-40">
         <div>
-          <strong>Player: {user?.displayName} </strong>
+          <strong className="text-[#fff]">Player: {user?.displayName} </strong>
           <hr />
-          <strong>Best Score: </strong>
-          {Math.max(...maxScore())}
+          <strong className="text-[#fff]">Best Score: {Math.max(...maxScore())} </strong>
           <Link to="/quiz">
             <button
               type="button"
-              className="w-full rounded bg-[#90FCF9] py-3 font-semibold"
+              className="w-full rounded bg-purple-400 text-[#fff] py-3 font-semibold"
             >
               Start Game
             </button>

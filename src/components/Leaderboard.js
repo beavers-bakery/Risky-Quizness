@@ -41,7 +41,7 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="flex w-full justify-center items-center flex-col">
+    <div className="flex relative z-40 py-20 w-full justify-center items-center flex-col">
       {loading ? (
         <h2 className="mt-20 font-bold text-3xl text-white">Loading...</h2>
       ) : (

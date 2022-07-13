@@ -16,8 +16,8 @@ const Navbar = () => {
   };
 
   return (
-    <div className="shadow-md w-full top-0 left-0">
-      <div className="md:flex  items-center justify-between bg-green-600 py-4 text-white md:px-10 px-7">
+    <div className="drop-shadow-lg fixed w-full top-0 left-0 z-50">
+      <div className="md:flex  items-center justify-between bg-purple-400 py-4 text-white md:px-10 px-7">
         <div className="font-bold text-2xl">
           <NavLink to={"/"}>Risky Quizness</NavLink>
         </div>
@@ -32,7 +32,7 @@ const Navbar = () => {
           )}
         </div>
         <div
-          className={`flex flex-col md:flex-row items-center md:pb-0 pb-6 absolute z-50 md:static bg-green-600 left-0 w-full md:w-auto transition-all duration-500 ease-in ${
+          className={`flex flex-col md:flex-row items-center md:pb-0 pb-6 absolute z-50 md:static bg-purple-400 left-0 w-full md:w-auto transition-all duration-500 ease-in ${
             open ? "top-15" : "top-[-490px]"
           }`}
         >

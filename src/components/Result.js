@@ -13,29 +13,24 @@ const Result = () => {
   useEffect(() => {
     const confettiSettings = { target: 'my-canvas' };
     const confetti = new ConfettiGenerator(confettiSettings);
-    if(points > 10)
+    if(points > 40)
     confetti.render();
     addUserScore(user?.uid, points, 'General');
     return () => confetti.clear();
     // eslint-disable-next-line
   }, []);
-
   return (
     <div
-      id='popup'
-      className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900"
-      // className='md:flex md:h-screen md:justify-center lg:justify-center'
-    >
-      {points <= 10 ? (
-        <p className='text-6xl font-serif text-[#b457f2]'>
-          NOT THE BRIGHTEST!
+      id='popup'>
+      {points <= 40 ? (
+        <p className='text-6xl font-serif text-[#fff]'>
+          BETTER LUCK NEXT TIME!
         </p>
       ) : (
-        <p className='text-7xl font-serif text-[#b457f2] mt-10'>CONGRATS!</p>
+        <p className='text-7xl font-serif text-[#fff] mt-10'>GREAT WORK!</p>
       )}
-      {/* <p className='text-7xl font-serif text-[#b457f2] mt-10'>CONGRATS!</p> */}
-      <div className='flex flex-col text-5xl items-center bg-[#00CC99]'>
-          <strong className='text-[#b457f2]'>
+      <div className='flex flex-col text-5xl items-center'>
+          <strong className='text-[#fff]'>
             Your Final Score is {points}
           </strong>
       </div>

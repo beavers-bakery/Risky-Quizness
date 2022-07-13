@@ -25,7 +25,7 @@ const UserProfile = () => {
   return (
     <>
       {showEditModal && (
-        <div className="flex items-center justify-center absolute z-50 w-full h-3/4">
+        <div className="flex items-center justify-center relative z-40 py-40">
           <EditProfile
             showEditModal={showEditModal}
             setShowEditModal={setShowEditModal}
@@ -34,7 +34,7 @@ const UserProfile = () => {
         </div>
       )}
       <div
-        className={`flex justify-center w-screen ${
+        className={`flex justify-center w-screen h-full relative z-40 py-20 ${
           showEditModal ? "opacity-20" : ""
         }`}
       >

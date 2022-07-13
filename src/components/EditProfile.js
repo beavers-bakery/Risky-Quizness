@@ -29,7 +29,7 @@ const EditProfile = ({ showEditModal, setShowEditModal, setUserInfo }) => {
   };
 
   return (
-    <div className="border-2 shadow-md rounded-md w-[400px] bg-white">
+    <div className="border-2 shadow-md rounded-md px-5 w-[400px] bg-white">
       <div className="p-4">
         <div className="flex justify-between">
           <h2 className="text-2xl font-bold text-center">Edit Information</h2>

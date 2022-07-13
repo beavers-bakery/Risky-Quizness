@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
+import {
+  collection,
+  getDocs,
+  query,
+  limit,
+  getFirestore,
+} from "firebase/firestore";
+import { db } from "../firebase";
 import { getTodaysQuestions } from "../contexts/StoreContext";
 import { useNavigate } from "react-router-dom";
+import Result from "./Result";
 
 export default function Quizpage() {
   // let background = document.getElementById("background")
@@ -31,21 +40,7 @@ export default function Quizpage() {
   // should be helpful to change questions every day
   async function queryForQuestions() {
     const questions = await getTodaysQuestions();
-    setQuestionsFromDatabase(
-      questions.sort((a, b) => {
-        if (a.difficulty === "easy" && b.difficulty !== "easy") {
-          return -1;
-        } else if (a.difficulty !== "easy" && b.difficulty === "easy") {
-          return 1;
-        } else if (a.difficulty === "medium" && b.difficulty === "hard") {
-          return -1;
-        } else if (a.difficulty === "hard" && b.difficulty === "medium") {
-          return 1;
-        } else {
-          return 0;
-        }
-      })
-    );
+    setQuestionsFromDatabase(questions);
   }
 
   // after every question re-shuffle questions array
@@ -148,12 +143,6 @@ export default function Quizpage() {
 
   let checkAnswer = (chosen, answer) => {
     if (chosen === answer && timer > 0) {
-      console.log(
-        "...Not bad",
-        "questionsFromDatabase[questionNumber].difficulty: ",
-        questionsFromDatabase[questionNumber].difficulty,
-        chosen
-      );
       if (questionsFromDatabase[questionNumber].difficulty === "easy") {
         setPoints(points + 10);
       }
@@ -193,7 +182,7 @@ export default function Quizpage() {
           key={i}
           onClick={
             timer > 0 && !answerPicked
-              ? () => setChosenAnswer(answer)
+              ? () => {setChosenAnswer(answer)}
               : () => {}
           }
         >

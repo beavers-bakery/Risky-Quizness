@@ -19,10 +19,6 @@ function Testpage() {
     navigate("/welcome");
   };
 
-  const testfunction = async (evt) => {
-    evt.preventDefault();
-  };
-
   const hasPlayed = async (evt) => {
     evt.preventDefault();
     console.log(await hasPlayedToday(user.uid));

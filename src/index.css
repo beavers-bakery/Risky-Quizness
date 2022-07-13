@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  background: url(../public/back.jpeg) no-repeat center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: 100% 100%;
-}
 
 .will-change-transform {
   will-change: transform;

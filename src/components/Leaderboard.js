@@ -41,7 +41,7 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="flex justify-center items-center flex-col">
+    <div className="flex w-full justify-center items-center flex-col bg-gray-500">
       {loading ? (
         <h2 className="mt-20 font-bold text-3xl text-white">Loading...</h2>
       ) : (
@@ -54,8 +54,8 @@ const Leaderboard = () => {
               onClick={handleClick}
               data-id="1000"
               value="all-time"
-              className={`shadow-sm border-2 border-black rounded-md py-1 px-4 m-2 bg-[#37123C] text-white hover:border-white ease-in duration-300 ${
-                selectedButton === "all-time" ? "border-white" : null
+              className={`shadow-lg  rounded-md py-1 px-4 m-2 bg-[#62226b] text-white hover:border-2 hover:border-white ease-in duration-50 ${
+                selectedButton === "all-time" ? "border-2 border-white" : null
               }`}
             >
               All Time
@@ -64,8 +64,8 @@ const Leaderboard = () => {
               onClick={handleClick}
               data-id="7"
               value="this-week"
-              className={`shadow-sm border-2 border-black rounded-md py-1 px-4 m-2 bg-[#37123C] text-white hover:border-white ease-in duration-300 ${
-                selectedButton === "this-week" ? "border-white" : null
+              className={`shadow-lg  rounded-md py-1 px-4 m-2 bg-[#62226b] text-white hover:border-2 hover:border-white ease-in duration-50 ${
+                selectedButton === "this-week" ? "border-2 border-white" : null
               }`}
             >
               This Week
@@ -74,8 +74,8 @@ const Leaderboard = () => {
               onClick={handleClick}
               data-id="0"
               value="today"
-              className={`shadow-sm border-2 border-black rounded-md py-1 px-4 m-2 bg-[#37123C] text-white hover:border-white ease-in duration-300 ${
-                selectedButton === "today" ? "border-white" : null
+              className={`shadow-lg   rounded-md py-1 px-4 m-2 bg-[#62226b] text-white hover:border-2 hover:border-white ease-in duration-50 ${
+                selectedButton === "today" ? "border-2 border-white" : null
               }`}
             >
               Today
@@ -85,19 +85,19 @@ const Leaderboard = () => {
             <h2>No Scores Available Yet</h2>
           ) : (
             <>
-              <table className="w-screen m-4 border-separate border-spacing-y-2 table-auto max-w-[900px]">
+              <table className="w-[95%] m-4 border-separate border-spacing-y-2 table-auto max-w-[900px] ">
                 <tbody>
-                  <tr className="bg-[#37123C] text-white">
-                    <th className="border-black border-y-2 border-l-2 rounded-md rounded-r-none text-center py-4 drop-shadow-2xl">
+                  <tr className="bg-[#62226b] text-white drop-shadow-xl">
+                    <th className="rounded-md rounded-r-none text-center py-4 ">
                       Rank
                     </th>
-                    <th className="border-black border-y-2 rounded-md rounded-l-none rounded-r-none text-center">
+                    <th className="rounded-md rounded-l-none rounded-r-none text-center">
                       Username
                     </th>
-                    <th className="border-black border-y-2 rounded-md rounded-l-none rounded-r-none text-center">
+                    <th className="rounded-md rounded-l-none rounded-r-none text-center">
                       Score
                     </th>
-                    <th className=" border-black border-y-2 rounded-md border-r-2 rounded-l-none text-center">
+                    <th className="rounded-md rounded-l-none text-center">
                       Date
                     </th>
                   </tr>

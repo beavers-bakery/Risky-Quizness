@@ -43,7 +43,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="relative h-full px-5 py-20 z-40">
+      <div className="relative h-screen px-5 py-20 z-40">
         <div>
           <strong className="text-[#fff]">Player: {user?.displayName} </strong>
           <hr />

@@ -41,7 +41,7 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="flex relative z-40 py-20 w-full justify-center items-center flex-col">
+    <div className="flex relative z-40 py-20 h-full w-full justify-center items-center flex-col">
       {loading ? (
         <h2 className="mt-20 font-bold text-3xl text-white">Loading...</h2>
       ) : (
@@ -54,7 +54,7 @@ const Leaderboard = () => {
               onClick={handleClick}
               data-id="1000"
               value="all-time"
-              className={`shadow-lg  rounded-md py-1 px-4 m-2 bg-[#62226b] text-white hover:border-2 hover:border-white ease-in duration-50 ${
+              className={`shadow-lg  rounded-md py-1 px-4 m-2 bg-purple-700 text-white hover:border-2 hover:border-white ease-in duration-50 ${
                 selectedButton === "all-time" ? "border-2 border-white" : null
               }`}
             >
@@ -64,7 +64,7 @@ const Leaderboard = () => {
               onClick={handleClick}
               data-id="7"
               value="this-week"
-              className={`shadow-lg  rounded-md py-1 px-4 m-2 bg-[#62226b] text-white hover:border-2 hover:border-white ease-in duration-50 ${
+              className={`shadow-lg  rounded-md py-1 px-4 m-2 bg-purple-700 text-white hover:border-2 hover:border-white ease-in duration-50 ${
                 selectedButton === "this-week" ? "border-2 border-white" : null
               }`}
             >
@@ -74,7 +74,7 @@ const Leaderboard = () => {
               onClick={handleClick}
               data-id="0"
               value="today"
-              className={`shadow-lg   rounded-md py-1 px-4 m-2 bg-[#62226b] text-white hover:border-2 hover:border-white ease-in duration-50 ${
+              className={`shadow-lg   rounded-md py-1 px-4 m-2 bg-purple-700 text-white hover:border-2 hover:border-white ease-in duration-50 ${
                 selectedButton === "today" ? "border-2 border-white" : null
               }`}
             >
@@ -87,7 +87,7 @@ const Leaderboard = () => {
             <>
               <table className="w-[95%] m-4 border-separate border-spacing-y-2 table-auto max-w-[900px] ">
                 <tbody>
-                  <tr className="bg-[#62226b] text-white drop-shadow-xl">
+                  <tr className="bg-purple-700 text-white drop-shadow-xl">
                     <th className="rounded-md rounded-r-none text-center py-4 ">
                       Rank
                     </th>

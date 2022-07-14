@@ -8,9 +8,11 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 
-export const hasPlayedToday = async function (userId) {
+// user related functions below
+export const hasFinisedToday = async function (userId) {
   const scoresArr = await getUserScores(userId);
   let hasPlayed = false;
   let today = new Date(Date.now());
@@ -65,6 +67,30 @@ export const getUserScores = async function (userId) {
   return scoresArr;
 };
 
+export const addOrUpdateUserGameState = async function (
+  userId,
+  currentQuestion,
+  currentScore
+) {
+  const userGameState = {
+    currentQuestion: currentQuestion,
+    currentScore: currentScore,
+    timeSaved: serverTimestamp(),
+  };
+  // setDoc allows us to set the gameState id the same as the user Id.
+  // set doc will also update the doc if it already exists
+  await setDoc(doc(db, "userGameStates", userId), userGameState);
+};
+
+export const getUserGameState = async function (userId) {
+  const userGameStatesRef = doc(db, "userGameStates", userId);
+  const docSnapshot = await getDoc(userGameStatesRef);
+  const gameState = { ...docSnapshot.data() };
+  return gameState;
+};
+
+// Question related functions below
+
 export const getTodaysQuestions = async function () {
   // get todays date in proper format in "Sat Jul 09 2022"
   const today = new Date(Date.now()).toDateString();
@@ -100,7 +126,7 @@ export const seedAllQuestions = async function () {
   }
 };
 
-// Questions array below
+// Questions array below for seeding
 const rawQuestions = [
   {
     category: "Society & Culture",

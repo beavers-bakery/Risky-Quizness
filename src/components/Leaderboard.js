@@ -1,43 +1,53 @@
 import React, { useEffect, useState } from "react";
-import { getAllScores } from "../contexts/StoreContext";
-import LeaderboardRow from "./LeaderboardRow";
+import {
+  fetchMore,
+  getAllScores,
+  getTodayScores,
+  fetchMoreToday,
+} from "../contexts/StoreContext";
+import AllTimeLeaderboard from "./AllTimeLeaderboard";
+import TodayLeaderboard from "./TodayLeaderboard";
 
 const Leaderboard = () => {
   const [scores, setScores] = useState([]);
-  const [period, setPeriod] = useState("0");
+  const [lastDoc, setLastDoc] = useState();
   const [selectedButton, setSelectedButton] = useState("today");
   const [loading, setLoading] = useState(false);
+  const [loadMoreLoading, setLoadMoreLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     const getData = async () => {
-      const scores = await getAllScores();
+      setLoading(true);
+      let scores;
+      if (selectedButton === "today") {
+        scores = await getTodayScores(setLastDoc);
+      } else {
+        scores = await getAllScores(setLastDoc);
+      }
       setScores(scores);
       setLoading(false);
     };
     getData();
-  }, []);
-
-  const between = (data, between) => {
-    const today = new Date();
-    const previous = new Date(today);
-    previous.setDate(previous.getDate() - between);
-
-    const filter = data.filter((val) => {
-      const userDate = new Date(val.createdAt.seconds * 1000);
-      if (between === "1000") return val;
-      if (between === "0") {
-        return userDate.toDateString() === today.toDateString();
-      }
-      return previous <= userDate && today >= userDate;
-    });
-
-    return filter.sort((a, b) => b.score - a.score);
-  };
+  }, [selectedButton]);
 
   const handleClick = (e) => {
-    setPeriod(e.target.dataset.id);
     setSelectedButton(e.target.value);
+  };
+
+  const handleLoadMore = async () => {
+    setLoadMoreLoading(true);
+    const moreScores = await fetchMore(setLastDoc, lastDoc);
+    setLoadMoreLoading(false);
+
+    setScores([...scores, ...moreScores]);
+  };
+
+  const handleLoadMoreToday = async () => {
+    setLoadMoreLoading(true);
+    const moreScores = await fetchMoreToday(setLastDoc, lastDoc);
+    setLoadMoreLoading(false);
+
+    setScores([...scores, ...moreScores]);
   };
 
   return (
@@ -54,34 +64,25 @@ const Leaderboard = () => {
               onClick={handleClick}
               data-id="1000"
               value="all-time"
-              className={`shadow-lg  rounded-md py-1 px-4 m-2 bg-purple-700 text-white hover:border-2 hover:border-white ease-in duration-50 ${
+              className={`shadow-lg rounded-md py-2 px-6 m-2 bg-purple-700 text-white hover:border-2 hover:border-white ease-in duration-50 ${
                 selectedButton === "all-time" ? "border-2 border-white" : null
               }`}
             >
               All Time
             </button>
-            <button
-              onClick={handleClick}
-              data-id="7"
-              value="this-week"
-              className={`shadow-lg  rounded-md py-1 px-4 m-2 bg-purple-700 text-white hover:border-2 hover:border-white ease-in duration-50 ${
-                selectedButton === "this-week" ? "border-2 border-white" : null
-              }`}
-            >
-              This Week
-            </button>
+
             <button
               onClick={handleClick}
               data-id="0"
               value="today"
-              className={`shadow-lg   rounded-md py-1 px-4 m-2 bg-purple-700 text-white hover:border-2 hover:border-white ease-in duration-50 ${
+              className={`shadow-lg rounded-md py-2 px-6 m-2 bg-purple-700 text-white hover:border-2 hover:border-white ease-in duration-50 ${
                 selectedButton === "today" ? "border-2 border-white" : null
               }`}
             >
               Today
             </button>
           </div>
-          {between(scores, period).length < 1 ? (
+          {scores.length < 1 ? (
             <h2>No Scores Available Yet</h2>
           ) : (
             <>
@@ -101,22 +102,29 @@ const Leaderboard = () => {
                       Date
                     </th>
                   </tr>
-
-                  {between(scores, period).map((score, i) => {
-                    const date = new Date(score.createdAt?.seconds * 1000);
-
-                    return (
-                      <LeaderboardRow
-                        key={score.id}
-                        rank={i + 1}
-                        username={score.username}
-                        score={score.score}
-                        date={date.toDateString()}
-                      />
-                    );
-                  })}
+                  {selectedButton === "today" ? (
+                    <TodayLeaderboard scores={scores} />
+                  ) : (
+                    <AllTimeLeaderboard scores={scores} />
+                  )}
                 </tbody>
               </table>
+              <div>
+                {loadMoreLoading ? (
+                  <h2 className="text-white text-lg">Loading More...</h2>
+                ) : (
+                  <button
+                    onClick={
+                      selectedButton === "today"
+                        ? handleLoadMoreToday
+                        : handleLoadMore
+                    }
+                    className="drop-shadow-lg rounded-lg py-2 px-6 text-white bg-purple-400"
+                  >
+                    Load More
+                  </button>
+                )}
+              </div>
             </>
           )}
         </>

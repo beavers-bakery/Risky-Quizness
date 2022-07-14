@@ -13,21 +13,24 @@ function App() {
   const { user } = useAuth();
 
   return (
-    <div className="h-screen bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900">
-    <Router >
-      {user && <Navbar />}
-      <Routes>
-        <Route path="/" element={user ? <Home /> : <Welcome />} />
-        <Route path="/profile" element={user ? <UserProfile /> : <Welcome />} />
-        <Route path="/quiz" element={user ? <Quizpage /> : <Welcome />} />
-        <Route
-          path="/leaderboard"
-          element={user ? <Leaderboard /> : <Welcome />}
-        />
-        <Route path="/result" element={user ? <Result /> : <Welcome />} />
-        <Route path="/testpage" element={<Testpage />} />
-      </Routes>
-    </Router>
+    <div className="h-full bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900">
+      <Router>
+        {user && <Navbar />}
+        <Routes>
+          <Route path="/" element={user ? <Home /> : <Welcome />} />
+          <Route
+            path="/profile"
+            element={user ? <UserProfile /> : <Welcome />}
+          />
+          <Route path="/quiz" element={user ? <Quizpage /> : <Welcome />} />
+          <Route
+            path="/leaderboard"
+            element={user ? <Leaderboard /> : <Welcome />}
+          />
+          <Route path="/result" element={user ? <Result /> : <Welcome />} />
+          <Route path="/testpage" element={<Testpage />} />
+        </Routes>
+      </Router>
     </div>
   );
 }

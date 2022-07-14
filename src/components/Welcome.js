@@ -8,9 +8,9 @@ const Welcome = () => {
   const [showResetModal, setShowResetModal] = useState(false);
 
   return (
-    <div className={`bg-gray-100 h-screen`}>
+    <div className={`h-screen relative z-40`}>
       {showSignupModal ? (
-        <div className="flex items-center justify-center absolute z-50 w-full h-full">
+        <div className="flex items-center justify-center px-5 relative z-50 w-full h-full">
           <Signup
             setShowSignupModal={setShowSignupModal}
             showSignupModal={showSignupModal}
@@ -26,15 +26,15 @@ const Welcome = () => {
         </div>
       ) : null}
       <div
-        className={`flex flex-col items-center lg:flex-row lg:justify-around lg:items-center z-1 ${
+        className={`flex flex-col  items-center lg:flex-row lg:justify-around lg:items-center z-1 ${
           showSignupModal || showResetModal ? "opacity-20" : ""
         }`}
       >
-        <div className="mb-4 mt-8 lg:mt-24">
-          <h2 className="text-center text-green-900 text-4xl font-bold mb-2">
+        <div className="mb-4 mt-8 lg:mt-24 ">
+          <h2 className="text-center text-purple-200 text-4xl font-bold mb-2">
             Risky Quizness
           </h2>
-          <h2 className="text-center text-xl">
+          <h2 className="text-center text-purple-300 text-xl">
             Test your knowledge and boast your rankings.
           </h2>
         </div>

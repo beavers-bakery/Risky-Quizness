@@ -18,12 +18,6 @@ const Home = () => {
     setScores(userScores);
   };
 
-  useEffect(() => {
-    getScores();
-    getHasUserPlayed();
-    // eslint-disable-next-line
-  }, [user]);
-
   const maxScore = () => {
     const scoreArr = [];
     scores.map((score) => {
@@ -31,6 +25,12 @@ const Home = () => {
     });
     return scoreArr;
   };
+
+  useEffect(() => {
+    getScores();
+    getHasUserPlayed();
+    // eslint-disable-next-line
+  }, [user]);
 
   const latestScore = (scoresArr) => {
     let chosenScore = scoresArr[0];
@@ -44,19 +44,38 @@ const Home = () => {
   return (
     <>
       <div className="relative h-screen px-5 py-20 z-40">
-        <div>
-          <strong className="text-[#fff]">Player: {user?.displayName} </strong>
-          <hr />
+        <p className="text-[#fff] text-3xl items-center justify-center px-6 mx-8 py-2 font-extrabold">Welcome to Risky Quizzness!</p>
+        <div className="border-2 drop-shadow-lg mx-8 mb-6 px-6 py-4 rounded-md md:w-[750px]">
+          <strong className="text-[#fff] text-3xl">Player: {user?.displayName} </strong>
+          <hr className="invisible" />
           <strong className="text-[#fff]">
-            Best Score: {Math.max(...maxScore())}{" "}
+            Best Score: {!maxScore().length ? ' No scores yet!' : Math.max(...maxScore())}
+            {" "}
           </strong>
-          {userhasFinisedToday ? (
+          {userhasFinisedToday && (
             <div>
               <strong className="text-[#fff]">
                 Today's Score: {latestScore(scores)}
               </strong>
             </div>
-          ) : (
+          )}
+        </div>
+        <div className="mt-6 md:w-[800px]">
+          <div className="border-2 drop-shadow-lg mx-8 mb-8 px-6 py-4 rounded-md">
+            <strong className="text-[#fff] text-4xl">Rules of the Game!!</strong>
+            <ul className="text-[#fff] list-disc">
+              <li>You can only play the game <strong className="text-red-400 text-2xl">once a day</strong>.</li>
+              <li>You are timed on each question.</li>
+              <li>New set of 10 questions daily.</li>
+              <li>All users get the same set of questions each day.</li>
+              <li>The faster you answer a question, the more points you get!</li>
+              <li>Good Luck!</li>
+            </ul>
+          </div>
+        </div>
+        {!userhasFinisedToday && (
+          <div className="mt-6 md:w-[800px]">
+            <div className="border-2 drop-shadow-lg mx-8 mb-8 px-6 py-4 rounded-md">
             <Link to="/quiz">
               <button
                 type="button"
@@ -65,8 +84,9 @@ const Home = () => {
                 Start Game
               </button>
             </Link>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

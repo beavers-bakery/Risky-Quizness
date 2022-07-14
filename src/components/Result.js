@@ -25,14 +25,14 @@ const Result = () => {
   }, []);
   return (
     <div id="popup" className="h-screen">
+      <div className="flex flex-col text-5xl py-40 px-4 items-center">
       {points <= 40 ? (
         <p className="text-6xl font-serif text-[#fff]">
           BETTER LUCK NEXT TIME!
         </p>
       ) : (
-        <p className="text-7xl font-serif text-[#fff] mt-10">GREAT WORK!</p>
+        <p className="text-7xl font-serif items-center px-5 text-[#fff] py-5">GREAT WORK!</p>
       )}
-      <div className="flex flex-col text-5xl items-center">
         <strong className="text-[#fff]">Your Final Score is {points}</strong>
       </div>
     </div>

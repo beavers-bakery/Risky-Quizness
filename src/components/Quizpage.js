@@ -1,25 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getTodaysQuestions } from "../contexts/StoreContext";
+import {
+  getTodaysQuestions,
+  addOrUpdateUserGameState,
+  getUserGameState,
+} from "../contexts/StoreContext";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Quizpage() {
-  // let background = document.getElementById("background")
-  // background.style.backgroundImage = "url('./Quizpage.jpeg')"
+  //initialize state variables
+  const maxTime = 15;
+  const { user } = useAuth();
   const [questionNumber, setQuestionNumber] = useState(0);
-  // used let for time useState for more flexibility with time checks
-  // as well as rendering countdown
-  const [timer, setTimer] = useState("15");
+  const [points, setPoints] = useState(0);
+  const [timer, setTimer] = useState(maxTime.toString());
   // ranOnce for checks after each question
   const [ranOnce, setRanOnce] = useState(false);
+
   // shuffle incorrect and correct answers into an array
   const [shuffledArray, setShuffledArray] = useState([]);
   const [questionsFromDatabase, setQuestionsFromDatabase] = useState([]);
   let [chosenAnswer, setChosenAnswer] = useState("");
   let [answerPicked, setAnswerPicked] = useState(false);
-  const [points, setPoints] = useState(0);
   const [isRight, setIsRight] = useState(false);
   const Ref = useRef(null);
   const navigate = useNavigate();
+
   // color constants for easy on-the-fly tailwind changes when answer is choosen/incorrect ect
   const red = "bg-rose-700";
   const green = "bg-green-500";
@@ -27,14 +33,27 @@ export default function Quizpage() {
   const grey = "bg-gray-400";
   const transparent = "--tw-bg-opacity: 1";
 
-  // limit only pulls the first 10 questions instead of all of them
-  // should be helpful to change questions every day
-  async function queryForQuestions() {
+  async function initialFirebaseQueries() {
+    const savedGameState = await getUserGameState(user.uid);
     const questions = await getTodaysQuestions();
     setQuestionsFromDatabase(questions);
+    if (savedGameState.timeSaved) {
+      // Day only of user - Wed Jul 28 1993
+      const userDay = new Date(Date.now).toDateString();
+      // Day only of savedGame - Thu Jul 29 1993
+      const savedGameDate = new Date(savedGameState.timeSaved).toDateString();
+      if (userDay === savedGameDate) {
+        //if its still the same day, used the saved state,
+        setQuestionNumber(savedGameState?.currentQuestion);
+        setPoints(savedGameState?.currentScore);
+      } else {
+        // if not the same day, adjust saved game data on firebase
+        addOrUpdateUserGameState(user?.uid, 0, 0); // reset GameState to 0
+      }
+    }
   }
 
-  // after every question re-shuffle questions array
+  // after every question repopulate and shuffle the answers array
   async function setData() {
     try {
       if (!ranOnce) {
@@ -61,10 +80,9 @@ export default function Quizpage() {
   // reset a bunch of stuff after every question
   const resetQuestion = () => {
     if (questionNumber === questionsFromDatabase.length - 1) {
-      console.log("we're trying to navigate");
-      console.log("the pioints being passed are: ", points);
       navigate("/result", { state: { points } });
     } else {
+      // typically, call below functions to go to next questions
       setQuestionNumber(questionNumber + 1);
       setChosenAnswer("");
       clearTimer(getDeadTime());
@@ -75,10 +93,10 @@ export default function Quizpage() {
   };
 
   useEffect(() => {
-    // very important to call queryForQuestions before startTimer
+    // very important to call initialFirebaseQueries before startTimer
     // unless you like pain
     // on first run set the questions to local storage
-    queryForQuestions();
+    initialFirebaseQueries();
     // startTimer()
     clearTimer(getDeadTime());
     // returned function will be called on component unmount
@@ -128,25 +146,29 @@ export default function Quizpage() {
 
     // This is where you need to adjust if
     // you entend to add more time
-    deadline.setSeconds(deadline.getSeconds() + 15);
+    deadline.setSeconds(deadline.getSeconds() + maxTime);
     return deadline;
   };
 
   let checkAnswer = (chosen, answer) => {
+    let newPoints = points;
     if (chosen === answer && timer > 0) {
+      const timerPercentage = timer / maxTime;
       if (questionsFromDatabase[questionNumber].difficulty === "easy") {
-        setPoints(points + 10);
+        newPoints += Math.ceil(10 * timerPercentage);
       }
       if (questionsFromDatabase[questionNumber].difficulty === "medium") {
-        setPoints(points + 20);
+        newPoints += Math.ceil(20 * timerPercentage);
       }
       if (questionsFromDatabase[questionNumber].difficulty === "hard") {
-        setPoints(points + 30);
+        newPoints += Math.ceil(30 * timerPercentage);
       }
+      setPoints(newPoints);
       setIsRight(true);
     }
     setAnswerPicked(true);
     setTimer(0);
+    addOrUpdateUserGameState(user?.uid, questionNumber + 1, newPoints);
   };
 
   // memo prevents array from shuffling every second from the timer re-render

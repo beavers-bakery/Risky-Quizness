@@ -1,7 +1,7 @@
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
-  hasPlayedToday,
+  hasFinisedToday,
   getTodaysQuestions,
   seedAllQuestions,
 } from "../../contexts/StoreContext";
@@ -21,7 +21,7 @@ function Testpage() {
 
   const hasPlayed = async (evt) => {
     evt.preventDefault();
-    console.log(await hasPlayedToday(user.uid));
+    console.log(await hasFinisedToday(user.uid));
   };
 
   const getQuestions = async (evt) => {

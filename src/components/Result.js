@@ -24,7 +24,7 @@ const Result = () => {
     // eslint-disable-next-line
   }, []);
   return (
-    <div id="popup">
+    <div id="popup" className="h-screen">
       {points <= 40 ? (
         <p className="text-6xl font-serif text-[#fff]">
           BETTER LUCK NEXT TIME!

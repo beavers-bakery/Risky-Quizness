@@ -55,16 +55,20 @@ export const getAllScores = async () => {
 };
 
 export const getUserScores = async function (userId) {
-  const scoresRef = collection(db, "scores");
-  const q = query(scoresRef, where("userId", "==", userId));
-  const querySnapshot = await getDocs(q);
-  const scoresArr = [];
-  querySnapshot.forEach((doc) => {
-    const docObj = { ...doc.data() };
-    docObj.scoreId = doc.id;
-    scoresArr.push(docObj);
-  });
-  return scoresArr;
+  if (userId) {
+    const scoresRef = collection(db, "scores");
+    const q = query(scoresRef, where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    const scoresArr = [];
+    querySnapshot.forEach((doc) => {
+      const docObj = { ...doc.data() };
+      docObj.scoreId = doc.id;
+      scoresArr.push(docObj);
+    });
+    return scoresArr;
+  } else {
+    return [];
+  }
 };
 
 export const addOrUpdateUserGameState = async function (

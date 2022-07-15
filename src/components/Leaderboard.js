@@ -14,6 +14,7 @@ const Leaderboard = () => {
   const [selectedButton, setSelectedButton] = useState("today");
   const [loading, setLoading] = useState(false);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+  const [noMoreScores, setNoMoreScores] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
@@ -24,6 +25,13 @@ const Leaderboard = () => {
       } else {
         scores = await getAllScores(setLastDoc);
       }
+
+      if (scores.length < 10) {
+        setNoMoreScores(true);
+      } else {
+        setNoMoreScores(false);
+      }
+
       setScores(scores);
       setLoading(false);
     };
@@ -39,6 +47,11 @@ const Leaderboard = () => {
     const moreScores = await fetchMore(setLastDoc, lastDoc);
     setLoadMoreLoading(false);
 
+    if (moreScores.length < 10) {
+      setNoMoreScores(true);
+      return;
+    }
+
     setScores([...scores, ...moreScores]);
   };
 
@@ -46,6 +59,11 @@ const Leaderboard = () => {
     setLoadMoreLoading(true);
     const moreScores = await fetchMoreToday(setLastDoc, lastDoc);
     setLoadMoreLoading(false);
+
+    if (moreScores.length < 10) {
+      setNoMoreScores(true);
+      return;
+    }
 
     setScores([...scores, ...moreScores]);
   };
@@ -109,20 +127,25 @@ const Leaderboard = () => {
                   )}
                 </tbody>
               </table>
+
               <div className="mt-1">
-                {loadMoreLoading ? (
-                  <h2 className="text-white text-lg">Loading More...</h2>
-                ) : (
-                  <button
-                    onClick={
-                      selectedButton === "today"
-                        ? handleLoadMoreToday
-                        : handleLoadMore
-                    }
-                    className="drop-shadow-lg rounded-lg py-2 px-6 text-white bg-purple-700"
-                  >
-                    Load More
-                  </button>
+                {noMoreScores ? null : (
+                  <>
+                    {loadMoreLoading ? (
+                      <h2 className="text-white text-lg">Loading More...</h2>
+                    ) : (
+                      <button
+                        onClick={
+                          selectedButton === "today"
+                            ? handleLoadMoreToday
+                            : handleLoadMore
+                        }
+                        className="drop-shadow-lg rounded-lg py-2 px-6 text-white bg-purple-700"
+                      >
+                        Load More
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </>

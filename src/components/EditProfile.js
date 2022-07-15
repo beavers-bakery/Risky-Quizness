@@ -52,7 +52,7 @@ const EditProfile = ({ showEditModal, setShowEditModal, setUserInfo }) => {
           className="flex flex-col justify-center items-center"
         >
           <div className="mt-4">
-            <label for="edit-email" className="ml-1">
+            <label htmlFor="edit-email" className="ml-1">
               Email
             </label>
             <input
@@ -63,7 +63,7 @@ const EditProfile = ({ showEditModal, setShowEditModal, setUserInfo }) => {
             />
           </div>
           <div className="my-4">
-            <label for="edit-display-name" className="ml-1">
+            <label htmlFor="edit-display-name" className="ml-1">
               Username
             </label>
             <input

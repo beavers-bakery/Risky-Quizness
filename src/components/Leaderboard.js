@@ -69,7 +69,7 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="flex relative z-40 py-20 h-full w-full justify-center items-center flex-col">
+    <div className="flex relative z-40 mt-14 pb-12 h-full w-full justify-center items-center flex-col">
       {loading ? (
         <h2 className="mt-20 font-bold text-3xl text-white">Loading...</h2>
       ) : (
@@ -107,7 +107,7 @@ const Leaderboard = () => {
               <table className="w-[95%] m-4 border-separate border-spacing-y-2 table-auto max-w-[900px] ">
                 <tbody>
                   <tr className="bg-purple-700 text-white drop-shadow-xl">
-                    <th className="rounded-md rounded-r-none text-center py-4 ">
+                    <th className="rounded-md rounded-r-none text-center px-2 py-2 md:py-4 ">
                       Rank
                     </th>
                     <th className="rounded-md rounded-l-none rounded-r-none text-center">
@@ -127,7 +127,8 @@ const Leaderboard = () => {
                   )}
                 </tbody>
               </table>
-              <div>
+
+              <div className="mt-1">
                 {noMoreScores ? null : (
                   <>
                     {loadMoreLoading ? (
@@ -139,7 +140,7 @@ const Leaderboard = () => {
                             ? handleLoadMoreToday
                             : handleLoadMore
                         }
-                        className="drop-shadow-lg rounded-lg py-2 px-6 text-white bg-purple-400"
+                        className="drop-shadow-lg rounded-lg py-2 px-6 text-white bg-purple-700"
                       >
                         Load More
                       </button>

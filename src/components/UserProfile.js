@@ -62,15 +62,17 @@ const UserProfile = () => {
               <h2 className="font-bold">Score</h2>
               <h2 className="font-bold">Date</h2>
             </div>
-            {scores.map((score, i) => {
-              const date = new Date(score.createdAt.seconds * 1000);
-              return (
-                <div key={i} className="flex justify-between">
-                  <h2>{score.score}</h2>
-                  <h2>{date.toDateString()}</h2>
-                </div>
-              );
-            })}
+            {scores
+              .sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
+              .map((score, i) => {
+                const date = new Date(score.createdAt.seconds * 1000);
+                return (
+                  <div key={i} className="flex justify-between">
+                    <h2>{score.score}</h2>
+                    <h2>{date.toDateString()}</h2>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>

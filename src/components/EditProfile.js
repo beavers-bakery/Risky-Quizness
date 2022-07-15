@@ -51,20 +51,26 @@ const EditProfile = ({ showEditModal, setShowEditModal, setUserInfo }) => {
           onSubmit={handleSubmit}
           className="flex flex-col justify-center items-center"
         >
-          <div>
+          <div className="mt-4">
+            <label for="edit-email" className="ml-1">
+              Email
+            </label>
             <input
               id="edit-email"
               placeholder="Email"
               ref={emailRef}
-              className="mt-4 h-10 border-2 rounded-md p-2 w-[350px]"
+              className=" h-10 border-2 rounded-md p-2 w-[350px]"
             />
           </div>
-          <div>
+          <div className="my-4">
+            <label for="edit-display-name" className="ml-1">
+              Username
+            </label>
             <input
               id="edit-display-name"
               placeholder="Display Name"
               ref={displayNameRef}
-              className="m-4 h-10 border-2 rounded-md p-2 w-[350px]"
+              className="h-10 border-2 rounded-md p-2 w-[350px]"
             />
           </div>
           <div>

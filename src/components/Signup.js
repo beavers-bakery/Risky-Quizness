@@ -91,7 +91,7 @@ const Signup = ({ setShowSignupModal, showSignupModal }) => {
             />
           </div>
           <div>
-            <button className="w-[350px] border-2 rounded-md px-8 py-2 bg-green-600 text-white mt-2">
+            <button className="w-[350px] border-2 rounded-md px-8 py-2 bg-purple-900 text-white mt-2">
               Signup
             </button>
           </div>

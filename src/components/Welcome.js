@@ -10,7 +10,7 @@ const Welcome = () => {
   return (
     <div className={`h-screen relative z-40`}>
       {showSignupModal ? (
-        <div className="flex items-center justify-center px-5 relative z-50 w-full h-full">
+        <div className="flex justify-center px-5 absolute z-50 w-full top-28">
           <Signup
             setShowSignupModal={setShowSignupModal}
             showSignupModal={showSignupModal}
@@ -18,7 +18,7 @@ const Welcome = () => {
         </div>
       ) : null}
       {showResetModal ? (
-        <div className="flex items-center justify-center absolute z-50 w-full h-full">
+        <div className="flex top-40 justify-center absolute z-50 w-full">
           <PasswordReset
             setShowResetModal={setShowResetModal}
             showResetModal={showResetModal}

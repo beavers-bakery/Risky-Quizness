@@ -178,7 +178,7 @@ export default function Quizpage() {
     return shuffledArray.map((answer, i) => {
       return (
         <button
-          className={`flex justify-center gap-4 py-8 mt-4 rounded-md
+          className={`w-10/12 py-4 mb-4 md:py-8 md:mt-4 rounded-md
         font-small text-white uppercase
         focus:outline-none ring-2 ring-offset-2 ${
           answer === chosenAnswer && timer > 0 && !answerPicked
@@ -197,7 +197,10 @@ export default function Quizpage() {
             timer > 0 && !answerPicked
               ? () => {
                   setChosenAnswer(answer);
-                  checkAnswer(answer, questionsFromDatabase[questionNumber].correctAnswer)
+                  checkAnswer(
+                    answer,
+                    questionsFromDatabase[questionNumber].correctAnswer
+                  );
                 }
               : () => {}
           }
@@ -211,52 +214,74 @@ export default function Quizpage() {
   // if the questions are there let's do the thing ... or naw
 
   return (
-    <div className="relative z-40 h-full py-20">
-      {isRight && (timer <= 0 || answerPicked) ? (
-        <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
-          <br className="block md:hidden" />
-          <span className="neon-text inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
-            Nice Work!
-          </span>
-          <span className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"></span>
-        </h1>
-      ) : !isRight && (timer <= 0 || answerPicked) ? (
-        <div className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
-          <br className="block md:hidden" />
-          <h1 className="neon-text inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
-            Try Again!
+    <div className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 flex justify-center h-full py-20">
+      <div className="m-4 w-full md:max-w-[750px]">
+        {isRight && (timer <= 0 || answerPicked) ? (
+          <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+            <span className="neon-text inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
+              Nice Work!
+            </span>
+            <span className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"></span>
           </h1>
-          <span className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"></span>
-        </div>
-      ) : (
-        <h1 className="neon-text mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
-          Good Luck!
-        </h1>
-      )}
-      <div className=" neon-wrapper ">
-      <div className="grid place-items-center">
-        <div className="my-6 text-center w-4/6 flex justify-between">
-      <span className={`text-xl text-white ${questionsFromDatabase[questionNumber]?.difficulty === "easy" ? "text-green-500" : (questionsFromDatabase[questionNumber]?.difficulty === "medium" ? "text-blue-400" : "text-rose-700")} `}>{questionsFromDatabase[questionNumber]?.difficulty === "easy" ? "Easy " : (questionsFromDatabase[questionNumber]?.difficulty === "medium" ? "Medium "  : "Hard ")}</span>
-      <span className={`text-2xl ${timer <= 5 && !answerPicked ? "text-rose-700" : (timer <= 10 && !answerPicked? "text-yellow-400" : "text-green-500")} inline`}>
-          {!answerPicked ? timer : 0}
-        </span>
-        <span className="text-2xl neon-text">score: {points}</span>
-      <span className="text-2xl neon-text">
-         {questionNumber + 1} / 10
-        </span>
-        </div>
-        </div>
-      <div className="grid place-items-center">
-        <div className="my-6 text-center w-4/6">
-          <div className="text-2xl text-white">
-            {questionsFromDatabase[questionNumber]?.question}
+        ) : !isRight && (timer <= 0 || answerPicked) ? (
+          <div className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+            <h1 className="neon-text inline-flex h-20 pt-2 overflow-x-hidden animate-type group-hover:animate-type-reverse whitespace-nowrap text-brand-accent will-change-transform">
+              Try Again!
+            </h1>
+            <span className="box-border inline-block w-1 h-10 ml-2 -mb-2 bg-white md:-mb-4 md:h-16 animate-cursor will-change-transform"></span>
           </div>
-          <div id="answer-buttons" className="grid gap-4 grid-cols-2 my-6">
-            {<Answers />}
+        ) : (
+          <h1 className="neon-text mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
+            Good Luck!
+          </h1>
+        )}
+        <div className="flex flex-col items-center neon-wrapper">
+          <div className="my-6 mb-4 px-8 text-center w-full flex justify-between items-center">
+            <span
+              className={`text-xl text-white my-2 ${
+                questionsFromDatabase[questionNumber]?.difficulty === "easy"
+                  ? "text-green-500"
+                  : questionsFromDatabase[questionNumber]?.difficulty ===
+                    "medium"
+                  ? "text-blue-400"
+                  : "text-rose-700"
+              } `}
+            >
+              {questionsFromDatabase[questionNumber]?.difficulty === "easy"
+                ? "Easy "
+                : questionsFromDatabase[questionNumber]?.difficulty === "medium"
+                ? "Medium "
+                : "Hard "}
+            </span>
+            <span
+              className={`text-2xl border-2 rounded-full py-2 px-3 ${
+                timer <= 5 && !answerPicked
+                  ? "text-rose-700"
+                  : timer <= 10 && !answerPicked
+                  ? "text-yellow-400"
+                  : "text-green-500"
+              } inline`}
+            >
+              {!answerPicked ? timer : 0}
+            </span>
+            <span className="text-2xl neon-text">score: {points}</span>
+            <span className="text-2xl neon-text">
+              {questionNumber + 1} / 10
+            </span>
           </div>
-          <div className="grid gap-4 my-7">
+          <div className="flex flex-col items-center w-full">
+            <h2 className="text-xl md:text-2xl px-4 text-center text-white">
+              {questionsFromDatabase[questionNumber]?.question}
+            </h2>
+            <div
+              id="answer-buttons"
+              className="flex flex-col items-center w-full md:grid md:place-items-center md:gap-4 md:grid-cols-2 my-6"
+            >
+              {<Answers />}
+            </div>
+
             <button
-              className={`w-full py-3 mt-10 ${
+              className={`w-10/12 mb-6 py-3 md:mt-10 ${
                 timer > 0 && !answerPicked ? grey : blue
               } p-3 pl-4 pr-4 rounded-lg font-bold transition duration-500 ease-in-out hover:ring-2 ring-offset-2 ring-gray-600 ${
                 timer > 0 && !answerPicked ? "cursor-not-allowed" : ""
@@ -269,6 +294,5 @@ export default function Quizpage() {
         </div>
       </div>
     </div>
-          </div>
   );
 }

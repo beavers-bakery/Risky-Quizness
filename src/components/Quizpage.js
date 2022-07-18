@@ -208,42 +208,10 @@ export default function Quizpage() {
     });
   });
 
-  const Check = React.memo(() => {
-    return (
-      <button
-        className="w-full py-3 mt-10 bg-blue-400 p-3 pl-4 pr-4 rounded-lg font-bold hover:ring-2 ring-offset-2 ring-blue-600"
-        onClick={
-          !answerPicked
-            ? () =>
-                checkAnswer(
-                  chosenAnswer,
-                  questionsFromDatabase[questionNumber].correctAnswer
-                )
-            : () => {}
-        }
-      >
-        Check answer
-      </button>
-    );
-  });
-
   // if the questions are there let's do the thing ... or naw
 
   return (
     <div className="relative z-40 h-full py-20">
-      <div className="flex justify-between ">
-        <span className="text-2xl text-white text-right inline">
-          Points: {points}
-        </span>
-      </div>
-      <div className="flex justify-between">
-        <span className="text-2xl text-white text-left">
-          Question: {questionNumber + 1}
-        </span>
-        <span className="text-2xl text-white text-right inline">
-          Time: {!answerPicked ? timer : 0}
-        </span>
-      </div>
       {isRight && (timer <= 0 || answerPicked) ? (
         <h1 className="mb-1 font-mono text-4xl text-center text-gray-100 md:text-6xl">
           <br className="block md:hidden" />
@@ -265,14 +233,18 @@ export default function Quizpage() {
           Good Luck!
         </h1>
       )}
-      <div className=" neon-wrapper">
-      <div className="flex justify-between ">
-      <span className={`text-xl text-white text-left ${questionsFromDatabase[questionNumber]?.difficulty === "easy" ? green : (questionsFromDatabase[questionNumber]?.difficulty === "medium" ? blue : red)} `}>{questionsFromDatabase[questionNumber]?.difficulty === "easy" ? "Easy " : (questionsFromDatabase[questionNumber]?.difficulty === "medium" ? "Medium "  : "Hard ")}</span>
-      <span className="text-2xl text-white text-right">
-          question: {questionNumber + 1} / 10
+      <div className=" neon-wrapper ">
+      <div className="grid place-items-center">
+        <div className="my-6 text-center w-4/6 flex justify-between">
+      <span className={`text-xl text-white ${questionsFromDatabase[questionNumber]?.difficulty === "easy" ? "text-green-500" : (questionsFromDatabase[questionNumber]?.difficulty === "medium" ? "text-blue-400" : "text-rose-700")} `}>{questionsFromDatabase[questionNumber]?.difficulty === "easy" ? "Easy " : (questionsFromDatabase[questionNumber]?.difficulty === "medium" ? "Medium "  : "Hard ")}</span>
+      <span className={`text-2xl ${timer <= 5 && !answerPicked ? "text-rose-700" : (timer <= 10 && !answerPicked? "text-yellow-400" : "text-green-500")} inline`}>
+          {!answerPicked ? timer : 0}
+        </span>
+      <span className="text-2xl neon-text ">
+         {questionNumber + 1} / 10
         </span>
         </div>
-
+        </div>
       <div className="grid place-items-center">
         <div className="my-6 text-center w-4/6">
           <div className="text-2xl text-white">

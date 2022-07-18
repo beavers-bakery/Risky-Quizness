@@ -69,7 +69,7 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="flex relative z-40 mt-14 pb-12 h-full w-full justify-center items-center flex-col">
+    <div className="flex mt-16 w-full bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 items-center flex-col">
       {loading ? (
         <h2 className="mt-20 font-bold text-3xl text-white">Loading...</h2>
       ) : (
@@ -104,10 +104,10 @@ const Leaderboard = () => {
             <h2>No Scores Available Yet</h2>
           ) : (
             <>
-              <table className="w-[95%] m-4 border-separate border-spacing-y-2 table-auto max-w-[900px] ">
+              <table className="w-[95%] m-4 mt-1 border-separate border-spacing-y-2 table-auto max-w-[900px] ">
                 <tbody>
                   <tr className="bg-purple-700 text-white drop-shadow-xl">
-                    <th className="rounded-md rounded-r-none text-center px-2 py-2 md:py-4 ">
+                    <th className="rounded-md rounded-r-none text-center px-2 py-4">
                       Rank
                     </th>
                     <th className="rounded-md rounded-l-none rounded-r-none text-center">

@@ -2,8 +2,8 @@ import React from "react";
 
 const LeaderboardRow = ({ rank, username, score, date }) => {
   return (
-    <tr className="bg-purple-500 text-white md:text-lg drop-shadow-xl">
-      <td className="rounded-md rounded-r-none text-center py-2 md:py-4">
+    <tr className="bg-purple-500 text-white drop-shadow-xl">
+      <td className="rounded-md rounded-r-none text-center py-3">
         {rank}
       </td>
       <td className="rounded-md rounded-l-none rounded-r-none text-center">

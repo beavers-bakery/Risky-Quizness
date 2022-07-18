@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+#root,
+#root > div {
+  height: 100%;
+}
+
 .will-change-transform {
   will-change: transform;
 }

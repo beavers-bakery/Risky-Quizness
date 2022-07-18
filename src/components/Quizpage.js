@@ -240,7 +240,8 @@ export default function Quizpage() {
       <span className={`text-2xl ${timer <= 5 && !answerPicked ? "text-rose-700" : (timer <= 10 && !answerPicked? "text-yellow-400" : "text-green-500")} inline`}>
           {!answerPicked ? timer : 0}
         </span>
-      <span className="text-2xl neon-text ">
+        <span className="text-2xl neon-text">score: {points}</span>
+      <span className="text-2xl neon-text">
          {questionNumber + 1} / 10
         </span>
         </div>

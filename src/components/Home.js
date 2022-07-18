@@ -43,7 +43,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="relative h-screen px-5 py-20 z-40 flex flex-col items-center">
+      <div className="px-5 py-4 pt-24 flex flex-col items-center">
         <p className="text-[#fff] w-full text-2xl md:text-3xl text-center px-6 mx-8 py-2 font-extrabold">
           Welcome to Risky Quizness, {user?.displayName}!
         </p>

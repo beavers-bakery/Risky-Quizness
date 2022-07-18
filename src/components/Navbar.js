@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="drop-shadow-lg fixed w-full top-0 left-0 z-50">
+    <div className="drop-shadow-lg w-full top-0 left-0 absolute z-50">
       <div className="md:flex  items-center justify-between bg-purple-500 py-4 text-white md:px-10 px-7">
         <div className="font-bold text-2xl">
           <NavLink to={"/"}>Risky Quizness</NavLink>

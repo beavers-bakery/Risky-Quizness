@@ -26,7 +26,7 @@ const Welcome = () => {
         </div>
       ) : null}
       <div
-        className={`flex flex-col  items-center lg:flex-row lg:justify-around lg:items-center z-1 ${
+        className={`flex flex-col items-center lg:flex-row lg:justify-around lg:items-center z-1 ${
           showSignupModal || showResetModal ? "opacity-20" : ""
         }`}
       >
